@@ -127,13 +127,15 @@
 - Real-Time Scenarios
 - Command Practice
 - Bash Scripting Practice
-
 ----
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
-
-
-  # Module 2: Linux Boot Process
+ # Module 2: Linux Boot Process
 
 ## What is the Booting process of Linux?
 
