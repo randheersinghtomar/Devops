@@ -1009,4 +1009,24 @@ Configured in:
 ```text
 /etc/fstab
 ```
+## Mounting Process (Interview Flow)
 
+Always remember this sequence.
+```text
+Attach Disk
+       ↓
+Detect Disk
+       ↓
+Create Partition
+       ↓
+Create Filesystem
+       ↓
+Create Mount Point
+       ↓
+Mount Filesystem
+       ↓
+Verify Mount
+       ↓
+Add entry in /etc/fstab (Permanent)
+```
+Interviewers love asking this.
