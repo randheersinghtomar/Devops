@@ -946,11 +946,9 @@ Reason:
 # 3.) Mounting Filesystems
 
 ## What is Mounting?
-
 Mounting is the process of making a storage device (HDD, SSD, USB, CD/DVD, etc.) accessible by attaching it to a directory (mount point) in the Linux file system.
 
 ## Why is Mounting Required?
-
 Linux cannot access a storage device directly.
 
 Before using a partition or disk, it must be mounted to a directory.
@@ -995,7 +993,6 @@ mount /dev/sdb1 /mnt
 ```
 
 After reboot:
-
 ```text
 Mount is removed.
 ```
@@ -1030,3 +1027,6 @@ Verify Mount
 Add entry in /etc/fstab (Permanent)
 ```
 Interviewers love asking this.
+
+Unmounting
+Unmounting is the process of safely detaching a mounted filesystem from the Linux directory tree.
