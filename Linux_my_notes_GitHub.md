@@ -1,385 +1,496 @@
+## Linux Directory Structure
 
-# Module 1: Linux Fundamentals
+Everything on Linux starts from a single directory called the **root directory**.
 
-- Linux Introduction
-- Linux Architecture
-- Linux Installation
-- Shell Basics
+Unlike Windows, Linux doesn’t use drive letters such as C: / D:. Everything begins from `/`.
 
-# Module 2: Linux Boot Process
-
-# Module 3: Linux File System
-
-- FHS (Directory Structure)
-- File Types & Inodes
-- Mounting Filesystems
-
-# Module 4: Linux Commands
-
-- Basic Commands
-- File Management
-- Text Processing
-- Searching
-- Compression
-- Redirection & Pipes
-
-# Module 5: User Administration
-
-- Users & Groups
-- Password Management
-- Permissions
-- ACL
-- Hard & Soft Links
-
-# Module 6: Process & Package Management
-
-- Process Management
-- Job Control
-- Signals
-- RPM/YUM/DNF/APT
-
-# Module 7: Service Management
-
-- systemd
-- Services & Daemons
-- Targets
-- Journald
-
-# Module 8: Storage Management
-
-- Partitions
-- Filesystems
-- Mounting
-- LVM
-- Swap
-- RAID
-- Disk Quotas
-
-# Module 9: Networking
-
-- Networking Basics
-- IP Configuration
-- DNS
-- SSH
-- Firewall
-- Network Troubleshooting
-
-# Module 10: Server Administration
-
-- Logs
-- NFS
-- Samba
-- Apache
-- NGINX
-- FTP
-
-# Module 11: Backup & Recovery
-
-- Backup Concepts (Full, Incremental, Differential)
-- tar for Backup & Restore
-- rsync
-- cpio
-- dd (Disk/Partition Backup)
-- Snapshot Basics (LVM Snapshot)
-- Backup Verification
-- Backup Scheduling using Cron
-- Restore Files and Directories
-- Disaster Recovery Basics
-
-# Module 12: Automation
-
-- Cron Jobs
-- At Jobs
-- Bash Shell Scripting
-
-# Module 13: Security
-
-- SELinux
-- AppArmor
-- sudo & Password Policies
-- SSH Hardening
-
-# Module 14: Monitoring & Performance
-
-- Log Analysis
-- System Monitoring
-- Performance Monitoring
-- Resource Management
-
-# Module 15: Virtualization & Containers
-
-- VMware/KVM
-- Docker
-- Podman
-- Cloud Linux (AWS)
-
-# Module 16: Linux Troubleshooting
-
-- Boot Issues
-- Disk & Filesystem Issues
-- Network Issues
-- Service Failures
-- Performance Issues
-- Permission Issues
-
-# Module 17: Interview Preparation
-
-- Linux Interview Questions
-- Real-Time Scenarios
-- Command Practice
-- Bash Scripting Practice
-
-# Module 2: Linux Boot Process
-
-## What is the Booting process of Linux?
-
-The booting process is the sequence of steps that your Linux system follows to start, from the moment you power it on until you reach the login prompt or desktop.
-
-There are 6 stages of the Linux Boot Process.
-
-### 1. BIOS / UEFI – Power-On Self Test (POST)
-
-*(Think of BIOS/UEFI as the Security Guard.)*
-
-⟶ When we power on the system, the BIOS (Basic Input Output System) or UEFI performs a hardware check (POST)
-
-⟶ Its job is simply to check whether the computer is healthy. It checks hardware such as RAM, CPU, keyboard, and disks.
-
-⟶ After POST, BIOS/UEFI looks for a bootable device (like HDD, SSD, or USB).
-
-Then it loads the first sector (512 bytes) of the bootable disk—the MBR (Master Boot Record) or the EFI partition.
-
-### 2. MBR / GPT
-
-This is the Boot Loader Stage 1.
-
-MBR (Master Boot Record) or GPT (GUID Partition Table) contains:
-
-⟶ The boot loader information.
-
-⟶ The partition table.
-
-MBR loads the bootloader’s first stage (like GRUB)
-
-**Location:**
-
-⟶ MBR is stored in the first 512 bytes of the Boot disk.
-
-⟶ Contains small boot code + partition details.
+### Linux File System
 
 ```text
-{BIOS reads the MBR and executes its boot code.
-The MBR's job is not to boot Linux directly.
-Its only job is to find and start the bootloader (GRUB)}
+(/) Root
+├ System  → /boot, /bin, /sbin, /lib, /etc, /usr
+├ Users   → /home, /root
+├ Storage → /tmp, /mnt, /media
+└ Runtime → /dev, /proc, /sys, /run, /var, /opt, /srv
 ```
 
-### 3. GRUB (Grand Unified Bootloader)
+### 1.) /boot
 
-This is the Boot Loader stage 2.
+- Contains files required to boot Linux.
+- Examples: Linux Kernel (vmlinuz), initramfs, GRUB files, Boot configuration
 
-GRUB does:
+### 2.) /bin (User commands)
 
-⟶ Displays a boot menu (if multiple OS exist).
+- Meaning: Binary executables.
+- Contains essential commands required by all users.
+- Examples: `ls`, `cp`, `mv`, `cat`, `pwd`, `mkdir`, `rm`, `echo`
 
-⟶ Loads the Linux kernel (vmlinuz-<version>)
+### 3.) /sbin (Admin commands)
 
-⟶ Loads the initramfs/initrd (initial RAM disk)
+- Mostly used by the root user.
+- Usually requires administrative privileges.
+- Again, on many modern systems, `/sbin` is linked to `/usr/sbin`.
+- Examples: `fdisk`, `reboot`, `shutdown`, `mkfs`, `fsck`, `ip`
 
-**GRUB config files:**
+### 4.) /lib (Libraries)
 
-```text
-/boot/grub2/grub.cfg -> (for RHEL/CentOS)
-/boot/grub/grub.cfg  -> (for Ubuntu/Debian)
-```
+- Contain shared libraries needed by programs and the kernel.
+- `/lib` and `/lib64` contain essential libraries needed during boot and for basic system commands.
+- `/usr/lib` and `/usr/lib64` contain additional libraries for installed applications.
 
-**In Simple Words:-**
+### 5.) /etc (Configuration files)
 
-*(Think of GRUB as the Manager.)*
-
-```text
-{GRUB asks:
-"Which operating system do you want to start?"
+- Contains system-wide configuration files.
 
 Example:
-- Ubuntu
-- Windows
-- Recovery Mode
-
-You choose Ubuntu.
-
-GRUB loads:
-- Linux Kernel
-- initramfs
-
-into RAM.}
-```
-
-### 4. Kernel Initialization
-
-Once GRUB loads the kernel and initramfs, control passes to the Linux kernel.
-
-⟶ Kernel initialized hardware drivers.
-
-⟶ Mounts the root filesystem (/).
-
-⟶ Starts the first process (PID 1 → systemd).
-
-Initramfs helps the kernel load necessary drivers (for disks, filesystems, etc.) before the real root filesystem becomes available.
 
 ```text
-In simple words:-
-
-Linux Kernel (CEO)
-
-The Kernel takes control.
-
-It initializes:
-- CPU
-- Memory
-- USB
-- Keyboard
-- Device drivers
-
-Since the real filesystem isn't available yet, it temporarily uses initramfs
-(Temporary Toolbox).
-
-Initramfs contains the drivers and files needed to locate and mount the real
-root filesystem.
-
-Once the root filesystem is mounted, initramfs is discarded.
+/etc/passwd
+/etc/shadow
+/etc/fstab
+/etc/hosts
+/etc/resolv.conf
 ```
 
-### 5. Systemd (or init) – User Space Initialization
+### 6.) /usr (Applications)
 
-After the kernel mounts the root filesystem, it runs `/sbin/init` (or systemd in modern distros).
+- Contains user applications and shared resources.
+- Examples: `/usr/bin`, `/usr/sbin`, `/usr/lib`, `/usr/share`
 
-Systemd is the first user-space process (PID 1).
+### 7.) /home (Normal users)
 
-**Responsibilities:**
+- Contains home directories of normal users.
+- Example: `/home/user1`
 
-⟶ Systemd starts all other background services (daemons). E.g., Network, SSH, Bluetooth, Printer, Audio, Display Manager.
+### 8.) /root (Root user's home)
 
-⟶ Mounts file systems.
+- Home directory of the **root user**.
 
-⟶ Brings the system to the desired target (runlevel).
+### 9.) /tmp
 
-### 6. Login (User Space)/ Login Screen
+- Stores temporary files.
+- Usually cleared after reboot.
+- Any user can write here.
 
-Finally:
+### 10.) /mnt
 
-⟶ The system starts with login prompts (getty on terminals or GDM for GUI).
+- Temporary mount point used by administrators.
+- Example:
 
-⟶ You log in via username/password.
+```bash
+mount /dev/sdb1 /mnt
+```
+
+### 11.) /media
+
+- Used for automatically mounted removable devices.
+- Examples: USB drive, CD/DVD, External HDD
+
+### 12.) /dev
+
+- Contains device files.
+- In Linux, every hardware device is represented as a file.
+- Examples: `/dev/sda`, `/dev/sdb`, `/dev/null`
+
+### 13.) /proc
+
+- A virtual filesystem.
+- It doesn't store files on disk.
+- Instead, it provides live information about:
+  - CPU
+  - Memory
+  - Running processes
+
+Example:
+
+```bash
+cat /proc/cpuinfo
+cat /proc/meminfo
+```
+
+### 14.) /sys
+
+- Another virtual filesystem.
+- Provides information about:
+  - Hardware
+  - Kernel
+  - Drivers
+
+### 15.) /run
+
+- Stores runtime information.
+- Examples: PID files, Sockets, Runtime service information.
+- Contents are usually cleared after reboot.
+
+### 16.) /var
+
+- Stores variable data.
+- Examples:
+  - Logs
+  - Mail
+  - Cache
+  - Databases
+  - Print queues
+
+Important directory:
 
 ```text
-Username:
-Password:
+/var/log
 ```
 
-⟶ Shell (bash, zsh, etc.) has started.
+### 17.) /opt
 
-## Complete Flow (Legacy BIOS)
+- Used for optional or third-party software.
+- Example: `/opt/google`
+
+### 18.) /srv
+
+- Contains data served by services.
+- Examples:
+  - FTP server files
+  - Web server content
+  - Application data
+
+# 1.) File Types & Inodes
+
+## What is a File in Linux?
+
+In Linux, **everything is treated as a file**.
+
+Not only documents and images, but also:
+
+- Hard disks
+- USB drives
+- Keyboards
+- Mouse
+- Printers
+- Running processes
+
+## What are File Types?
+
+Linux stores different kinds of files.
+
+Every file belongs to one of **seven** file types.
+
+### Seven Linux File Types
+
+| Symbol | File Type | Description |
+|----------|----------|----------|
+| - | Regular File | Stores data (text, images, videos, scripts, etc.) |
+| d | Directory | Contains files and folders |
+| l | Symbolic (Soft) Link | Points to another file or directory |
+| c | Character Device | Transfers data one character at a time |
+| b | Block Device | Transfers data in blocks |
+| p | Named Pipe (FIFO) | Used for communication between processes |
+| s | Socket | Used for communication between applications |
+
+### I. Regular File (-)
+
+- Stores actual user data.
+- Example: `photo.jpg`, `resume.pdf`
+- Command:
+
+```bash
+ls -l
+```
+
+Output:
 
 ```text
-Power Button
-      ↓
-BIOS
-      ↓
-POST
-      ↓
-Read MBR
-      ↓
-GRUB (Bootloader)
-      ↓
-Load Kernel + initramfs
-      ↓
-Kernel Starts
-      ↓
-Mount Root Filesystem (/)
-      ↓
-systemd (PID 1)
-      ↓
-Services Start
-      ↓
-Login Screen
-      ↓
-Desktop / Shell
+-rw-r--r--
 ```
 
-### Useful Commands
+### II. Directory (d)
 
-Check boot logs:
+- A directory stores references to files and other directories.
+- Think of it as a folder.
+
+Command:
 
 ```bash
-dmesg | less
+mkdir Linux
+ls -l
 ```
 
-(Dmesg stands for display message)
+Output:
 
-**Q2. Why use dmesg | less instead of just dmesg?**
+```text
+drwxr-xr-x
+```
 
-**Answer:**
+### III. Symbolic Link (l)
 
-Because dmesg can produce hundreds of lines of output. Piping it to `less` lets you read and search the output page by page.
+- A symbolic link is like a shortcut in Windows.
+- It points to another file or directory.
 
-Check the last boot time:
+Create:
 
 ```bash
-who -b
+ln -s file.txt shortcut
 ```
 
-See system boot duration:
+Output:
+
+```text
+lrwxrwxrwx
+```
+
+### IV. Character Device (c)
+
+- Transfers data character by character.
+- Example:
+
+```text
+/dev/tty
+```
+
+Check:
 
 ```bash
-systemd-analyze
+ls -l /dev/null
 ```
 
-See which services took the longest during boot:
+Output:
+
+```text
+crw-rw-rw-
+```
+
+### V. Block Device (b)
+
+- A block device stores data in fixed-size blocks.
+- Examples:
+  - HDD
+  - SSD
+  - USB Drive
+
+- Linux device files:
+  - `/dev/sda`
+  - `/dev/sdb`
+
+Check:
 
 ```bash
-systemd-analyze blame
+ls -l /dev/sda
 ```
 
-## Linux Boot Process (In Short)
+Output:
 
-### BIOS/UEFI
+```text
+brw-rw----
+```
 
-⟶ BIOS initializes hardware components.
+### VI. Named Pipe (p)
 
-⟶ Performs POST (Power On Self-Test) to check RAM, CPU, and storage device.
+- Used for communication between two processes.
 
-⟶ Loads the bootloader (GRUB) into memory.
+Create:
 
-### Bootloader (GRUB)
+```bash
+mkfifo mypipe
+```
 
-⟶ Loads the Linux kernel into memory.
+Output:
 
-⟶ Provides a menu to select a different kernel or operating system.
+```text
+prw-r--r--
+```
 
-### Kernel Initialization
+### VII. Socket (s)
 
-⟶ Linux kernel loaded into RAM.
+- Used for communication between applications.
+- Example:
 
-⟶ Initializes hardware drivers and memory management.
+```text
+Web server ↔ Database
+```
 
-⟶ Mounts the initial root filesystem (initramfs and initrd).
+Check:
 
-⟶ Starts the init system (systemd).
+```bash
+find /run -type s
+```
 
-### Init System (systemd)
+## Q) How to Identify File Types?
 
-⟶ systemd starts essential services and daemons.
+Answer:
 
-⟶ Mount file systems (`/`, `/home`, `/var`) etc.
+```bash
+ls -l
+```
 
-⟶ Switches the system to the target runlevel (`default.target`).
+or
 
-### Runlevel/Target Initialization
+```bash
+file filename
+```
 
-⟶ systemd uses targets.
+Output:
 
-⟶ Common targets: `multi-user.target` and `graphical.target`.
+```text
+-rw-r--r-- file.txt
+drwxr-xr-x folder
+lrwxrwxrwx shortcut
+```
 
-### Login Prompt
+The first character identifies the file type.
 
-⟶ The system presents a login prompt.
+# Inodes
+
+An inode (Index Node) is a data structure that stores metadata (information) about a file.
+
+Think of an inode as an **identity card** for a file.
+
+Important:
+
+An inode does **not** store:
+
+- File name
+- Actual file data
+
+It stores information about the file, while the data itself is stored in data blocks and the filename is stored in the parent directory entry.
+
+## Q) Command to View Inode Number
+
+```bash
+ls -i
+```
+
+## Q) View Detailed Inode Information
+
+```bash
+stat filename
+```
+
+Shows:
+
+- Inode number
+- Permissions
+- Owner
+- Size
+- Timestamps
+- Link count
+
+## Q) What Information Does an Inode Store?
+
+An inode stores:
+
+- File type
+- File permissions
+- Owner (UID)
+- Group (GID)
+- File size
+- Last Access Time (atime)
+- Last Modification Time (mtime)
+- Last Status Change Time (ctime)
+- Number of Hard Links
+- Location of Data Blocks
+
+It does **not** store:
+
+- File name
+- Actual file data
+
+## Q) How Linux Opens a File
+
+```text
+Directory
+→ Find "report.txt"
+→ Get Inode Number
+→ Read the Inode
+→ Find Data Blocks
+→ Read File Contents
+```
+
+Linux follows these above steps.
+
+Directories are important because they connect filenames to inode numbers.
+
+## Q) What Happens in Different Operations?
+
+### Copy (cp)
+
+- New inode created
+- New data blocks created
+
+### Rename (mv)
+
+- File name changes
+- Inode remains the same
+
+### Delete (rm)
+
+- Directory entry removed
+- Link count decreases
+- Inode and data blocks are freed when no hard links remain and no process is using the file
+
+## Q) Check Inode Usage?
+
+```bash
+df -i
+```
+
+Useful when:
+
+- Disk has free space
+- Still unable to create files
+
+Reason:
+
+**Inodes are exhausted.**
+
+# 3.) Mounting Filesystems
+
+## What is Mounting?
+
+Mounting is the process of making a storage device (HDD, SSD, USB, CD/DVD, etc.) accessible by attaching it to a directory (mount point) in the Linux file system.
+
+## Why is Mounting Required?
+
+Linux cannot access a storage device directly.
+
+Before using a partition or disk, it must be mounted to a directory.
+
+## How Mounting Works
+
+Example:
+
+```text
+New Disk
+→ Partition Created
+→ Filesystem Created (ext4/XFS)
+→ Mounted to /data
+→ Accessible as /data
+```
+
+- Now users can store files in `/data`
+- `/data` becomes the entry point to access the file stored on `/dev/sdb1`
+
+## Types of Mounting
+
+### 1. Temporary Mount
+
+- Exists only until the next reboot.
+- Must be mounted manually.
+
+Example:
+
+```bash
+mount /dev/sdb1 /mnt
+```
+
+After reboot:
+
+```text
+Mount is removed.
+```
+
+### 2. Permanent Mount
+
+- Automatically mounts during system boot.
+
+Configured in:
+
+```text
+/etc/fstab
+```
