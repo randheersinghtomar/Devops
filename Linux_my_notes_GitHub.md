@@ -942,3 +942,71 @@ Useful when:
 Reason:
 
 **Inodes are exhausted.**
+
+# 3.) Mounting Filesystems
+
+## What is Mounting?
+
+Mounting is the process of making a storage device (HDD, SSD, USB, CD/DVD, etc.) accessible by attaching it to a directory (mount point) in the Linux file system.
+
+## Why is Mounting Required?
+
+Linux cannot access a storage device directly.
+
+Before using a partition or disk, it must be mounted to a directory.
+
+## How Mounting Works
+
+Example:
+
+Suppose a new disk is attached.
+
+```text
+New Disk
+    ↓
+Partition Created
+    ↓
+Filesystem Created (ext4/XFS)
+    ↓
+Mounted to /data
+    ↓
+Accessible as /data
+```
+
+Now users can store files in:
+
+```text
+/ data
+```
+
+`/data` becomes the entry point to access the files stored on `/dev/sdb1`.
+
+## Types of Mounting
+
+### 1. Temporary Mount
+
+- Exists only until the next reboot.
+- Must be mounted manually.
+
+Example:
+
+```bash
+mount /dev/sdb1 /mnt
+```
+
+After reboot:
+
+```text
+Mount is removed.
+```
+
+### 2. Permanent Mount
+
+- Automatically mounts during system boot.
+
+Configured in:
+
+```text
+/etc/fstab
+```
+
