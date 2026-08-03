@@ -1028,5 +1028,53 @@ Add entry in /etc/fstab (Permanent)
 ```
 Interviewers love asking this.
 
-Unmounting
+## Unmounting
 Unmounting is the process of safely detaching a mounted filesystem from the Linux directory tree.
+
+## /etc/fstab
+/etc/fstab (File System Table) is a configuration file that stores information about filesystems that should be mounted automatically during system boot.
+
+## UUID (Universally Unique Identifier)
+A UUID is a unique identifier assigned to a filesystem.
+It is preferred over device names (/dev/sdb1) because UUID remains the same even after reboot, while device names may change
+
+ # Commands (in sequence)
+#### Step 1 –Check Available Disks
+##### #lsblk 
+
+Purpose: Displays disks, Partitions, Mount points
+
+#### Step 2 –Check Filesystem & UUID
+##### #blkid
+
+Purpose: Shows UUID, Filesystem type, Partition information
+
+#### Step 3 –Create Mount Point
+##### #mkdir /data
+
+Purpose: Creates the directory where the filesystem will be mounted.
+
+#### Step 4 –Mount the Filesystem
+##### #mount /dev/sdb1 /data
+
+Purpose: Attaches the filesystem to /data.
+
+#### Step 5 –Verify Mount
+##### #df -h or #mount
+
+Purpose: Confirms the filesystem is mounted successfully.
+
+#### Step 6 – Configure Permanent Mount
+##### #vi /etc/fstab
+
+#### Step 7 –Test /etc/fstab
+##### #mount -a
+
+Purpose: Mounts all filesystems listed in /etc/fstab.
+         Checks for configuration errors without rebooting.
+
+Interview Tip: Always run mount -a after editing /etc/fstab. It helps detect mistakes before restarting the system.
+
+#### Step 8 – Unmount Filesystem
+
+##### #umount /data  or  #umount /dev/sdb1
