@@ -128,7 +128,12 @@
 - Command Practice
 - Bash Scripting Practice
 
-- # Module 2: Linux Boot Process
+----
+
+
+
+
+  # Module 2: Linux Boot Process
 
 ## What is the Booting process of Linux?
 
