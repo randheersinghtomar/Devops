@@ -531,7 +531,7 @@ This includes:
 - Networking Infrastructure
 - Power Supply
 - Cooling Systems
-- Hypervisor
+- Hypervisor ( virtualization software that creates and manages multiple virtual machines on a single physical server by sharing its hardware resources.)
 - Physical Security
 
 AWS ensures that the underlying cloud infrastructure remains secure, available, and reliable.
