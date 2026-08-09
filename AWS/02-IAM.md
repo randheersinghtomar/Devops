@@ -196,8 +196,44 @@ Examples:
 - Lambda
 - ECS
 
+#### Real-world example
+
+Imagine an office building.
+
+You are an employee.
+
+You normally have your own employee ID card:
+
+```text
+Rohit
+  ↓
+Employee ID Card
+```
+
+That ID card gives you your normal access.
+
+But suppose you need to enter the server room.
+
+You aren't permanently given access.
+
+Instead, security gives you a temporary badge:
+
+```text
+Rohit
+   ↓
+Requests Server Room Badge
+   ↓
+Security checks permission
+   ↓
+Temporary Badge
+   ↓
+Server Room
+```
+After some time, the badge expires.
+
 > **Note:** IAM Role hands-on will be covered in the EC2 chapter.
 
+ 
 ---
 
 # Multi-Factor Authentication (MFA)
