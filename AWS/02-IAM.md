@@ -109,14 +109,17 @@ Members:
 
 A Policy is a JSON document that defines permissions.
 
-Think of AWS as a large office building:
+#### AWS IAM — Simple Analogy
 
-IAM User → an employee
-IAM Group → a department/team
-IAM Role → a temporary access badge
-IAM Policy → the rules written on the badge saying what the person is allowed to do
+Think of **AWS as a large office building**:
 
-So, IAM Policy is basically a permission document.
+- 👤 **IAM User** → An employee
+- 👥 **IAM Group** → A department/team
+- 🎫 **IAM Role** → A temporary access badge
+- 📜 **IAM Policy** → The rules written on the badge saying what the person is allowed to do
+
+> **In simple words:**  
+> **IAM Policy is basically a permission document that defines what actions are allowed or denied on AWS resources.**
 
 Policies specify:
 
