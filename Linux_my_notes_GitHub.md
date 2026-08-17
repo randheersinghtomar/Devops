@@ -1446,11 +1446,91 @@ find / -inum <inode_number>
 > **Interview One-Liner:**
 > A **hard link** points to the same inode as the original file, while a **soft link** points to the pathname of the original file.
 
+---
+
+ # Module 8: Storage Management
+
+## 8.1.3) MBR vs GPT
+
+### First understand the basic idea
+
+Suppose you have a **1 TB hard disk**.
+
+You may want to divide it into partitions:
+
+```text
+1 TB Disk
+   |
+   +-- /dev/sda1  →  200 GB
+   |
+   +-- /dev/sda2  →  300 GB
+   |
+   +-- /dev/sda3  →  500 GB
+````
+
+**MBR and GPT decide how these partitions are recorded and managed on the disk.**
+
+---
+
+## MBR
+
+**MBR = Master Boot Record**
+
+It is the **older partitioning method**.
+
+The important limitations are:
+
+```text
+MBR
+ |
+ +-- Maximum 4 Primary Partitions
+ |
+ +-- Around 2 TB traditional disk-size limit
 ```
+
+For example:
+
+```text
+/dev/sda
+   |
+   +-- /dev/sda1   Primary
+   +-- /dev/sda2   Primary
+   +-- /dev/sda3   Primary
+   +-- /dev/sda4   Primary
 ```
 
+If you need more partitions, MBR uses **Extended + Logical partitions**, which makes things more complicated.
 
+-
 
+## GPT
+
+**GPT = GUID Partition Table**
+
+GPT is the **modern partitioning scheme** used to organize partitions on a disk.
+It removes most of the limitations of MBR:
+
+### Advantages of GPT
+
+- Supports **very large disks**
+- Supports **many partitions**
+- Has **more robust partition metadata**
+- Commonly used with **UEFI systems**
+- Modern Linux systems commonly use **GPT**
+
+### Example
+
+```text
+/dev/sda
+   |
+   +-- /dev/sda1
+   +-- /dev/sda2
+   +-- /dev/sda3
+   +-- /dev/sda4
+   +-- /dev/sda5
+   +-- ...
+````
+---
 
 
 
