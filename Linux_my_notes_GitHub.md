@@ -17,7 +17,8 @@
 
 - FHS (Directory Structure)
 - File Types & Inodes
-- Mounting Filesystems
+- Filesystem Concepts
+- Mount Points & Mounting
 - Hard & Soft Links
 
 # Module 4: Linux Commands
@@ -60,13 +61,17 @@
 
 # Module 8: Storage Management
 
-- Partitions
-- Filesystems
-- Mounting
-- LVM
-- Swap
-- RAID
-- Disk Quotas
+- Disk & Partition Concepts
+  - Disk vs Partition
+  - Primary / Extended / Logical Partitions
+  - Partition Tables: MBR & GPT
+
+- Partitioning
+  - Standard Partition
+  - Swap
+  - RAID
+  - LVM
+  - Partitioning Tools: fdisk, gdisk, parted
 
 # Module 9: Networking
 
