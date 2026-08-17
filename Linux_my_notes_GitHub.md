@@ -962,7 +962,7 @@ Reason:
 
 **Inodes are exhausted.**
 
-# 3.3 Filesystem Concepts
+# 3.3) Filesystem Concepts
 
 Now we reach the concept that connects **Module 3** and **Module 8**.
 
@@ -1084,7 +1084,7 @@ logs/
 This is the basic relationship between **storage, partitions, filesystems, and directories** in Linux.
 
 
-# 3.4) Mounting Filesystems
+# 3.4) Mount points & Mounting Filesystems
 ### Mount Point
 
 The **directory** where the filesystem is attached.
