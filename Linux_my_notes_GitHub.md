@@ -1253,3 +1253,204 @@ Interview Tip: Always run mount -a after editing /etc/fstab. It helps detect mis
 #### Step 8 – Unmount Filesystem
 
 ##### #umount /data  or  #umount /dev/sdb1
+
+
+# 3.5) Linux File Links
+
+Linux has two types of links:
+
+1. **Hard Link**
+2. **Soft Link (Symbolic Link)**
+
+---
+
+##  Hard Links
+
+A **hard link** is another filename that points to the **same inode** as the original file.
+
+```text
+file1 ─────┐
+           ↓
+        inode
+           ↓
+          data
+           ↑
+file2 ─────┘
+````
+
+Both filenames access the **same file data**.
+
+### Create a Hard Link
+
+```bash
+touch file1
+ln file1 file2
+```
+
+Check inode numbers:
+
+```bash
+ls -li
+```
+
+Example:
+
+```text
+12345 -rw-r--r-- 2 user user 0 file1
+12345 -rw-r--r-- 2 user user 0 file2
+```
+
+Both files have the **same inode number**.
+
+The `2` represents the **link count**.
+
+### If the Original File Is Deleted
+
+```bash
+rm file1
+```
+
+`file2` will still work because it points to the same inode.
+
+```text
+file1 ──X
+          \
+           inode → data
+          /
+file2 ──┘
+```
+
+The data is removed only when the **last hard link** is deleted.
+
+### Hard Link Limitations
+
+* Cannot cross **filesystems/partitions**.
+* Cannot normally be created for **directories** by regular users.
+* Both links must be on the **same filesystem**.
+
+### Find Hard Links
+
+Find the inode:
+
+```bash
+ls -i file1
+```
+
+Then search for the same inode:
+
+```bash
+find / -inum <inode_number>
+```
+
+---
+
+##  Soft Links
+
+A **soft link**, also called a **symbolic link (symlink)**, is a special file that stores the **path/reference** to another file.
+
+```text
+file2 → file1 → inode → data
+```
+
+The soft link has its **own inode**.
+
+### Create a Soft Link
+
+```bash
+ln -s file1 file2
+```
+
+Check it:
+
+```bash
+ls -l
+```
+
+Output:
+
+```text
+file2 -> file1
+```
+
+### Dangling / Broken Link
+
+A **dangling link** is a soft link whose target no longer exists.
+
+For example:
+
+```text
+file2 → file1 → inode → data
+```
+
+If we delete the target:
+
+```bash
+rm file1
+```
+
+The link remains:
+
+```text
+file2 → file1
+           X
+```
+
+Now `file2` is a **dangling/broken symbolic link** because its target `file1` does not exist.
+
+A dangling link can also occur if the target file is **moved or renamed**.
+
+### Soft Link Limitations
+
+* It can become broken if the target is deleted, moved, or renamed.
+* It does not point directly to the target's inode.
+
+### Advantages of Soft Links
+
+* Can cross **different filesystems**.
+* Can point to **directories**.
+* Useful when you want a convenient path/alias to another file or directory.
+
+---
+
+### Hard Link vs Soft Link
+
+| Feature              | Hard Link        | Soft Link                             |
+| -------------------- | ---------------- | ------------------------------------- |
+| Command              | `ln file1 file2` | `ln -s file1 file2`                   |
+| Inode                | Same inode       | Different inode                       |
+| Points to            | Inode            | Path/name                             |
+| Cross filesystem     | ❌ No             | ✅ Yes                                 |
+| Directory link       | ❌ Generally no   | ✅ Yes                                 |
+| Target deleted       | Link still works | Becomes dangling/broken               |
+| Target moved/renamed | Still works      | May become dangling                   |
+| Link count           | Increases        | Does not increase target's link count |
+
+---
+
+### Commands to Remember
+
+```bash
+# Create hard link
+ln source destination
+
+# Create soft link
+ln -s source destination
+
+# Check inode numbers
+ls -li
+
+# Find files having the same inode
+find / -inum <inode_number>
+```
+
+> **Interview One-Liner:**
+> A **hard link** points to the same inode as the original file, while a **soft link** points to the pathname of the original file.
+
+```
+```
+
+
+
+
+
+
