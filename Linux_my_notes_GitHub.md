@@ -1,33 +1,46 @@
+
 # Module 1: Linux Fundamentals
 
 - Linux Introduction
 - Linux Architecture
 - Linux Installation
 - Shell Basics
+- Linux Basic Symbols
+- Options / Switches
 
 # Module 2: Linux Boot Process
+
+- Linux Boot Process
+- Reset Root Password
 
 # Module 3: Linux File System
 
 - FHS (Directory Structure)
 - File Types & Inodes
 - Mounting Filesystems
+- Hard & Soft Links
 
 # Module 4: Linux Commands
 
 - Basic Commands
 - File Management
+- VI Editor
 - Text Processing
 - Searching
 - Compression
 - Redirection & Pipes
+- Command Filters
+- Copy & Move
 
 # Module 5: User Administration
 
 - Users & Groups
+- `/etc/passwd` & `/etc/shadow`
 - Password Management
 - Permissions
+- `chmod`, `chown`, `chgrp`
 - ACL
+- SUID, SGID, Sticky Bit
 - Hard & Soft Links
 
 # Module 6: Process & Package Management
@@ -42,6 +55,7 @@
 - systemd
 - Services & Daemons
 - Targets
+- Runlevels
 - Journald
 
 # Module 8: Storage Management
@@ -75,10 +89,10 @@
 # Module 11: Backup & Recovery
 
 - Backup Concepts (Full, Incremental, Differential)
-- tar for Backup & Restore
-- rsync
-- cpio
-- dd (Disk/Partition Backup)
+- `tar` for Backup & Restore
+- `rsync`
+- `cpio`
+- `dd` (Disk/Partition Backup)
 - Snapshot Basics (LVM Snapshot)
 - Backup Verification
 - Backup Scheduling using Cron
