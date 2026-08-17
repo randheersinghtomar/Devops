@@ -1745,5 +1745,6 @@ It removes most of the limitations of MBR:
 ````
 ---
 
+## 8.2) Partitioning
 
 
