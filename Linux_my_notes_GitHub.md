@@ -1450,6 +1450,167 @@ find / -inum <inode_number>
 
  # Module 8: Storage Management
  
+ ## 8.1.1) Disk vs Partition
+ 
+ ### Partition
+
+- It is a method by which we can break a disk into small parts.
+- These partitions can be used to store OS files and personal data files.
+
+### Types
+
+1. Standard partition
+2. Swap
+3. RAID
+4. LVM
+
+### Types of Data
+
+1. OS defined files or directory or folders.
+2. Custom data
+   - Created by any user for application backup or software data or sharing data.
+
+**OS defined data** => During the OS installation + after installing any application.
+
+**Custom Data** => After the OS installation only.
+
+---
+
+### In Windows
+
+### Disk
+
+Partition => C:\ , D:\ , E:\ , F:\
+
+- C:\ => use to store os file & we can also use it for the data.
+- D:\ E:\ F:\ => recommended drive to store data.
+
+---
+
+### In Linux
+
+- There is no concept of C:\ D:\ E:\ F:\ drive.
+- Whole OS will be represented by `/`
+
+`/` => Root filesystem or root partition or parent directory.
+
+---
+
+# /
+
+- It contains various standard Linux directories.
+- We can also create new directory over the OS partition to store any personal data.
+
+### Types of Data
+
+1. Default data
+2. Custom data
+
+```bash
+#
+```
+
+=> default data
+
+```bash
+mkdir /data
+mkdir /movie
+```
+
+=> custom data
+
+Disk => 20 GB
+
+15 GB => /
+
+=> OS directories + default data
+
+=> Remaining space for OS files + custom data.
+
+---
+
+### Disk Name
+
+#### 1) PATA or IDE
+
+```text
+hda
+```
+
+```text
+hda1  hda2  hda3
+```
+
+```text
+hdb
+```
+
+```text
+hdb1  hdb2
+```
+
+#### 2) SATA
+
+```text
+sda
+```
+
+```text
+sda1  sda2  sda3 .... etc
+```
+
+#### 3) Virtual Disk
+
+```text
+vda
+```
+
+```text
+vda1  vda2
+```
+
+---
+
+### Disk partition during OS installation
+
+#### 1) Automatic
+
+30 GB => machine will define the size automatically.
+
+#### 2) Custom
+
+We can define the space as per demand.
+
+---
+
+### Types of partition creation Technology
+
+#### 1) Standard method
+
+- Fixed size partition.
+
+#### 2) LVM method
+
+- Logical Volume Manager => recommended.
+- We can extend or reduce this logical volume size in future.
+
+---
+
+Partition creation commands:-
+1) Fdisk ==>
+    - supports DOS mode only
+   - runs perfectly on rhel 5,6,7 servers
+      
+           
+3) Parted ==> 
+   - supports DOS + gpt
+   - recommended for rhel 8 servers
+   - due to gpt, mbr limit increases here.   
+   
+            
+
+---
+ 
 ## 8.1.2) Primary / Extended / Logical Partitions
 
 ### Primary / Extended / Logical Partitions
