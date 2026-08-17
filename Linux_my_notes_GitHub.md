@@ -1253,7 +1253,7 @@ Interview Tip: Always run mount -a after editing /etc/fstab. It helps detect mis
 #### Step 8 – Unmount Filesystem
 
 ##### #umount /data  or  #umount /dev/sdb1
-
+---
 
 # 3.5) Linux File Links
 
@@ -1262,7 +1262,7 @@ Linux has two types of links:
 1. **Hard Link**
 2. **Soft Link (Symbolic Link)**
 
----
+-
 
 ##  Hard Links
 
