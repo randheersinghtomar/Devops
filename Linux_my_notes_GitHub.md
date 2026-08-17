@@ -1084,10 +1084,44 @@ logs/
 This is the basic relationship between **storage, partitions, filesystems, and directories** in Linux.
 
 
-# 3.) Mounting Filesystems
+# 3.4) Mounting Filesystems
+### Mount Point
 
-## What is Mounting?
+The **directory** where the filesystem is attached.
+
+Example:
+
+```text
+/data
+```
+
+### What is Mounting?
 Mounting is the process of making a storage device (HDD, SSD, USB, CD/DVD, etc.) accessible by attaching it to a directory (mount point) in the Linux file system.
+
+Example:
+
+```bash
+mount /dev/sdb1 /data
+```
+
+### Easy Way to Remember
+
+```text
+/data
+   ↓
+Mount Point
+
+
+mount /dev/sdb1 /data
+   ↓
+Mounting Operation
+```
+
+**In short:**
+
+* **Mount Point** → Where the filesystem is attached.
+* **Mounting** → The process of attaching the filesystem.
+
 
 ## Why is Mounting Required?
 Linux cannot access a storage device directly.
