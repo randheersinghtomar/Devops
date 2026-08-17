@@ -1498,35 +1498,6 @@ Example:
           |
           +-- /dev/sda7 → Logical
 ```
-
-### Easy Way to Remember
-
-```text
-Primary
-   ↓
-Actual partition
-```
-
-```text
-Extended
-   ↓
-Container
-```
-
-```text
-Logical
-   ↓
-Partition inside Extended partition
-```
-
-> **Primary = Actual partition**
-
-> **Extended = Container for logical partitions**
-
-> **Logical = Partition inside the Extended partition**
-
-This concept is relevant mainly when dealing with **MBR**.
-
 ```
 ```
 ---
