@@ -421,7 +421,7 @@ systemd-analyze blame
 
 # Module 3: Linux File System
 
-## 1.) FHS (Directory Structure)
+## 3.1.) FHS (Directory Structure)
 
 ### 1. What is a File System?
 
@@ -662,7 +662,7 @@ Examples:
 - Web server content
 - Application data
 
-- # 2.) File Types & Inodes
+ # 3.2.) File Types & Inodes
 
 ## What is a File in Linux?
 
@@ -961,6 +961,128 @@ Useful when:
 Reason:
 
 **Inodes are exhausted.**
+
+# 3.3 Filesystem Concepts
+
+Now we reach the concept that connects **Module 3** and **Module 8**.
+
+## What is a Filesystem?
+
+A filesystem is a **method/structure used by Linux to organize and manage data on storage**.
+
+Examples of Linux filesystems:
+
+```text
+XFS
+ext4
+ext3
+Btrfs
+```
+
+For example:
+
+```text
+/dev/sdb1
+    ↓
+   XFS
+    ↓
+ Mounted at /data
+```
+
+Here:
+
+* `/dev/sdb1` → Partition/device providing storage
+* `XFS` → Filesystem used to organize data
+* `/data` → Mount point where the filesystem is made accessible
+
+The **partition/device provides storage**, while the **filesystem determines how files and directories are organized on that storage**.
+
+---
+
+### Disk vs Partition vs Filesystem
+
+This distinction is **extremely important** for a Linux Administrator.
+
+Imagine:
+
+```text
+Physical Disk
+/dev/sdb
+
+│
+├── /dev/sdb1
+│      ↓
+│     XFS
+│
+└── /dev/sdb2
+       ↓
+      ext4
+```
+
+Here:
+
+```text
+/dev/sdb    → Disk
+
+/dev/sdb1   → Partition
+
+/dev/sdb2   → Partition
+
+XFS         → Filesystem
+
+ext4        → Filesystem
+```
+
+We can then mount the filesystem:
+
+```text
+/dev/sdb1
+    ↓
+   XFS
+    ↓
+  mount
+    ↓
+  /data
+```
+
+After mounting, users and applications can access the files through:
+
+```text
+/data
+```
+
+### Simple way to remember
+
+```text
+Disk
+  ↓
+Partition
+  ↓
+Filesystem
+  ↓
+Mount Point
+  ↓
+Files & Directories
+```
+
+Example:
+
+```text
+/dev/sdb
+   ↓
+/dev/sdb1
+   ↓
+  XFS
+   ↓
+ /data
+   ↓
+file1
+file2
+logs/
+```
+
+This is the basic relationship between **storage, partitions, filesystems, and directories** in Linux.
+
 
 # 3.) Mounting Filesystems
 
