@@ -1449,6 +1449,87 @@ find / -inum <inode_number>
 ---
 
  # Module 8: Storage Management
+ 
+## 8.1.2) Primary / Extended / Logical Partitions
+
+### Primary / Extended / Logical Partitions
+
+These concepts are primarily associated with **MBR**.
+
+--
+
+### Primary Partition
+
+Traditional MBR allows up to:
+
+```text
+4 primary partitions
+````
+
+Example:
+
+```text
+/dev/sda1
+/dev/sda2
+/dev/sda3
+/dev/sda4
+```
+
+--
+
+### Extended Partition
+
+An extended partition acts as a **container for logical partitions**.
+
+Example:
+
+```text
+/dev/sda
+   |
+   +-- /dev/sda1 → Primary
+   |
+   +-- /dev/sda2 → Primary
+   |
+   +-- /dev/sda3 → Extended
+          |
+          +-- /dev/sda5 → Logical
+          |
+          +-- /dev/sda6 → Logical
+          |
+          +-- /dev/sda7 → Logical
+```
+
+### Easy Way to Remember
+
+```text
+Primary
+   ↓
+Actual partition
+```
+
+```text
+Extended
+   ↓
+Container
+```
+
+```text
+Logical
+   ↓
+Partition inside Extended partition
+```
+
+> **Primary = Actual partition**
+
+> **Extended = Container for logical partitions**
+
+> **Logical = Partition inside the Extended partition**
+
+This concept is relevant mainly when dealing with **MBR**.
+
+```
+```
+---
 
 ## 8.1.3) MBR vs GPT
 
@@ -1470,7 +1551,7 @@ You may want to divide it into partitions:
 
 **MBR and GPT decide how these partitions are recorded and managed on the disk.**
 
----
+--
 
 ## MBR
 
@@ -1501,7 +1582,7 @@ For example:
 
 If you need more partitions, MBR uses **Extended + Logical partitions**, which makes things more complicated.
 
--
+--
 
 ## GPT
 
