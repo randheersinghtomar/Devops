@@ -743,7 +743,77 @@ CloudWatch Alarm
 ALARM
 ```
 
+### What are CloudWatch Events and EventBridge? What is the difference between monitoring a metric with a CloudWatch Alarm and responding to an AWS event with EventBridge?
+
+**Amazon EventBridge** is an AWS service used to detect events from AWS services, applications, and other sources and route those events to a target for automated action.
+
+CloudWatch and EventBridge are related, but they solve different problems.
+
+
+#### 1. CloudWatch Alarm → Monitors Metrics
+
+A CloudWatch Alarm watches a **metric** and takes action when a threshold is reached.
+
+### Example
+
+```text
+EC2 CPU > 80%
+      ↓
+CloudWatch Alarm
+      ↓
+SNS notification
+```
+
+This is about **performance/metric-based conditions**.
+
+#### 2. EventBridge → Responds to Events
+
+EventBridge reacts to an **event occurring**.
+
+For example:
+
+```text
+EC2 instance terminated
+        ↓
+EventBridge
+        ↓
+Lambda
+        ↓
+Send notification / perform action
+```
+
+Another example:
+
+```text
+New object uploaded to S3
+        ↓
+EventBridge
+        ↓
+Lambda
+        ↓
+Process the object
+```
+
+This is about **something happening in your AWS environment**.
+
+## CloudWatch Alarm vs EventBridge
+
+| CloudWatch Alarm           | EventBridge                      |
+| -------------------------- | -------------------------------- |
+| Monitors metrics           | Monitors/routes events           |
+| Uses thresholds            | Uses event patterns/rules        |
+| Example: CPU > 80%         | Example: EC2 instance terminated |
+| Mainly monitoring/alerting | Mainly event-driven automation   |
+
+
+### What About CloudWatch Events?
+
+**CloudWatch Events** was the earlier name/service for event-driven functionality that is now provided by **Amazon EventBridge**.
+
+EventBridge expanded those capabilities to support more event sources and integrations.
+
 ---
+
 
 # 25. Alarm States
 
