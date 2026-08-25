@@ -401,7 +401,15 @@ you can use the **CloudWatch Agent**.
 
 # 14. CloudWatch Agent
 
-The CloudWatch Agent is software installed on your server.
+Amazon CloudWatch Agent is software installed on your server/EC2 instance to collect additional monitoring data and send it to CloudWatch.
+
+### How It Works Step by Step
+
+1. **Install the CloudWatch Agent** on the EC2 instance.
+2. **Configure the agent** to specify what data you want to collect.
+3. The agent **continuously collects** metrics and logs.
+4. It **sends the data to Amazon CloudWatch**.
+5. You can create **dashboards and alarms** based on that data.
 
 Example:
 
@@ -426,6 +434,10 @@ Processes
 CPU
 Logs
 ```
+
+Important Interview Point ⭐
+
+By default, EC2 sends basic metrics such as CPU utilization to CloudWatch. But to monitor metrics like Memory usage and Disk usage, you generally need to install and configure the CloudWatch Agent.
 
 ### Remember
 
