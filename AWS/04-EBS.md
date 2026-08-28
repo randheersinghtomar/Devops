@@ -1,6 +1,88 @@
 # 📀 AWS Elastic Block Store (EBS) – (Fundamentals)
 
-> A complete guide to understanding Amazon Elastic Block Store (EBS) from basics to production concepts.
+
+# AWS Storage Basics
+
+## Introduction
+
+
+```text
+                         Storage
+            ┌──────────────┼──────────────┐
+            │              │              │
+       DAS (Block)     File Storage   Object Storage (Cloud)
+            │              │              │
+ 1.)Instance storage     1) NFS           S3
+ 2.)  EBS                 (Linux)
+                            EFS
+                        2.) CIFS(SMB)
+                            (Windows)
+                              FSx
+````
+
+# DAS (Direct-Attached Storage)
+
+"Think" of it as a personal hard drive that attaches to one computer (one EC2 instance)
+Hard disk, USB, Pendrive are examples of DAS.
+
+→ Instance storage - Ephemeral disks that come with an EC2 instance (data is lost when instance stops)
+
+(It is like giving water bottles to each)
+
+```text
+                    EC2 instance
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+    
+      Instance storage       Physical Host 2
+              │
+        Physical Host 1
+(Inst. storage attached to phy. host)
+```
+
+
+Consider an example of creating EC2 instance. AWS decides physical host ① for it. Phy. host ① has attached instance storage with it. EC2 inst. can access its inst. storage. If EC2 stops and then start, it can get another host (host is decided by AWS). It means if EC2 inst. now attached to physical host ② after start cannot access inst. storage attached to physical host ①.
+
+* As inst. storage is directly attached, performance is good, latency is very less.
+
+→ EBS (Elastic Block Storage)
+
+* A separate storage (hard disk) you attach to EC2.
+* It survives instance stop/start and can be moved to another computer.
+
+```text
+              EC2 instance
+                    |            
+           Physical Host 1    Physical Host 2
+                    \            /
+                     \          /                 
+                      EBS volume            |
+                                       Ph. Host 2 is external storage that can
+                                       be attached to any host as
+                                       per requirement
+```
+
+EC2 instance is changed from physical host ① to physical host ②, we can then also easily access the EBS vol as it can be attached separately with either host.
+
+* EBS vol. is a kind of outside storage. Performance is not as good as instance storage.
+
+# Diff b/w instance store & EBS Volume
+
+| Feature/aspect   | EC2 instance storage                                                                                                                                   | EBS                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Nature             | Temporary storage                                                                                                                                      | Persistent storage                                                            |
+| Life span        | Tied to the instance's lifecycle                                                                                                                       | Independent of instance's lifecycle                                           |
+| Data persistence | Data lost if instance is stopped/terminated or fails (no use with reboot)                                                                              | Data persists until volume is deleted                                         |
+| Size limits      | Depends on instance type (inst. storage cannot be taken with every EC2 instance, it comes with specific instance type) (Size of instance type are fix) | Upto 16 TiB (for most types) (flexible with all instance types)               |
+| Performance      | High IOPS and throughput                                                                                                                               | Varies by volume type; can achieve high IOPS and throughput with some config. |
+| Use case         | Temp. cache, scratch space, buffers etc                                                                                                                | Databases, file systems, boot volumes etc.                                    |
+| Cost             | Cost included with EC2 instance                                                                                                                        | Charged separately based on provisioned storage & I/O.                        |
+| mounting         | Auto-mounted on EC2 launch                                                                                                                             | must be attached and mounted to EC2 instance.                                 |
+
+```
+```
+
 
 
 # What is Amazon EBS?
