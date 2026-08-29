@@ -13,7 +13,7 @@
        DAS (Block)     File Storage   Object Storage (Cloud)
             │              │              │
  1.)Instance storage     1) NFS           S3
- 2.)  EBS                 (Linux)
+ 2.) EBS                 (Linux)
                             EFS
                         2.) CIFS(SMB)
                             (Windows)
@@ -25,7 +25,7 @@
 "Think" of it as a personal hard drive that attaches to one computer (one EC2 instance)
 Hard disk, USB, Pendrive are examples of DAS.
 
-→ Instance storage - Ephemeral disks that come with an EC2 instance (data is lost when instance stops)
+→ **<ins>Instance storage</ins>** -  Ephemeral disks that come with an EC2 instance (data is lost when instance stops)
 
 (It is like giving water bottles to each)
 
@@ -46,7 +46,7 @@ Consider an example of creating EC2 instance. AWS decides physical host ① for 
 
 * As inst. storage is directly attached, performance is good, latency is very less.
 
-→ EBS (Elastic Block Storage)
+→ **<ins>EBS (Elastic Block Storage)</ins>**
 
 * A separate storage (hard disk) you attach to EC2.
 * It survives instance stop/start and can be moved to another computer.
@@ -82,7 +82,6 @@ EC2 instance is changed from physical host ① to physical host ②, we can then
 
 ```
 ```
-
 
 
 # What is Amazon EBS?
