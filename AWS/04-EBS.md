@@ -192,8 +192,257 @@ mkfs
 mount
 df -h
 ```
+---
 
-to make the disk usable.
+# EBS Volume Mounting & Unmounting
+
+## 📌 EBS Volume Mounting
+
+After creating the new EBS volume over the AWS account and attaching to an EC2 Linux instance, we need to:
+
+> **Find → Check → Format → Create Mount Point → Mount**
+
+#### Step 1: Find the New EBS Volume
+
+```bash
+# sudo fdisk -l
+````
+
+* Lists all disks and partitions available on the server.
+* Identify the newly attached EBS volume.
+
+Example:
+
+```text
+/dev/nvme0n1 → Root/OS disk
+/dev/nvme1n1 → New EBS volume
+```
+
+#### Step 2: Check the Filesystem
+
+```bash
+# sudo file -s /dev/nvme1n1
+```
+
+* Checks whether the disk already has a filesystem.
+* A new/empty disk may show:
+
+```text
+/dev/nvme1n1: data
+```
+
+* If it already has a filesystem, it may show something like:
+
+```text
+/dev/nvme1n1: SGI XFS filesystem data
+```
+
+> ⚠️ Do not format a disk if it contains important data.
+
+#### Step 3: Create a Filesystem
+
+```bash
+# sudo mkfs -t xfs /dev/nvme1n1
+```
+
+* `mkfs` → Make filesystem
+* `-t xfs` → Create an XFS filesystem
+* `/dev/nvme1n1` → Target EBS volume
+
+This makes the raw EBS volume ready to store files.
+
+```text
+Before:
+EBS → Raw disk
+
+After:
+EBS → XFS filesystem → Ready for mounting
+```
+
+#### Step 4: Create a Mount Point
+
+```bash
+# sudo mkdir /myebsvol
+```
+
+* Creates the directory `/myebsvol`.
+* This directory will be used as the **mount point**.
+
+#### Step 5: Mount the EBS Volume
+
+```bash
+# sudo mount /dev/nvme1n1 /myebsvol
+```
+
+* Mounts the filesystem on `/dev/nvme1n1` to `/myebsvol`.
+* Files stored inside `/myebsvol` are now stored on the EBS volume.
+
+#### Verify the Mount
+
+```bash
+# df -h
+```
+or:
+
+```bash
+mount | grep /myebsvol
+```
+---
+
+## 🔄 Complete Mounting Flow
+
+```text
+Create EBS
+    ↓
+Attach EBS to EC2 over the AWS.
+    ↓
+fdisk -l
+(Find /dev/nvme1n1)
+    ↓
+file -s
+(Check filesystem)
+    ↓
+mkfs -t xfs
+(Create XFS filesystem)
+    ↓
+mkdir /myebsvol
+(Create mount point)
+    ↓
+mount /dev/nvme1n1 /myebsvol
+    ↓
+EBS is ready to use
+```
+---
+
+# 📌 EBS Volume Unmounting
+
+To reverse the mounting process:
+
+> **Check → Unmount → Remove Mount Point → Detach EBS**
+
+### Step 1: Check the Mount
+
+```bash
+# df -h
+```
+or:
+
+```bash
+# mount | grep /myebsvol
+```
+
+Confirm that `/dev/nvme1n1` is mounted on `/myebsvol`.
+
+#### Step 2: Unmount the EBS Volume
+
+```bash
+# sudo umount /myebsvol
+```
+
+* Disconnects the filesystem from the mount point.
+* It does **not** delete the EBS volume or its data.
+
+```text
+Before:
+
+/dev/nvme1n1
+      ↓
+ /myebsvol
+
+After:
+
+/dev/nvme1n1    /myebsvol
+     ↓               ↓
+  Separate       Not mounted
+```
+
+#### If You Get "Target is Busy"
+
+It means some process or user is using the mount point.
+
+Check with:
+
+```bash
+# sudo lsof +D /myebsvol
+```
+
+Stop/exit the process and then run:
+
+```bash
+# sudo umount /myebsvol
+```
+
+#### Step 3: Remove the Mount Point
+
+If you no longer need the directory:
+
+```bash
+# sudo rmdir /myebsvol
+```
+
+* `rmdir` removes the directory only if it is empty.
+* This does **not** delete the EBS volume.
+
+#### Step 4: Detach the EBS Volume
+
+From AWS Console:
+
+```text
+EC2
+  ↓
+Volumes
+  ↓
+Select EBS Volume
+  ↓
+Actions
+  ↓
+Detach Volume
+```
+
+The EBS volume is now detached from the EC2 instance.
+
+---
+
+# ⚠️ Important Difference
+
+#### `umount`
+
+```bash
+# sudo umount /myebsvol
+```
+
+**Unmounts** the filesystem.
+
+* Does NOT delete EBS
+* Does NOT delete data
+* EBS can still be attached/mounted again
+
+#### `rmdir`
+
+```bash
+# sudo rmdir /myebsvol
+```
+
+**Removes the empty mount-point directory.**
+
+* Does NOT delete EBS
+* Does NOT delete data on the EBS
+
+#### `Detach Volume`
+
+Detaches the EBS from the EC2 instance.
+
+* EBS still exists in AWS.
+* Data remains on the EBS.
+
+---
+
+> **Mount = Make EBS available to Linux**
+> **Unmount = Stop making EBS available through that mount point**
+> **Detach = Disconnect EBS from EC2**
+
+```
+```
 
 ---
 
