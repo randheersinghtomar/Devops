@@ -150,50 +150,6 @@ AWS provides EBS to store this information reliably.
 
 ---
 
-# How EBS Works
-
-The workflow is simple.
-
-```text
-Create EBS Volume
-        │
-        ▼
-Attach to EC2
-        │
-        ▼
-Linux Detects Disk
-        │
-        ▼
-Create Filesystem
-        │
-        ▼
-Mount Volume
-        │
-        ▼
-Application Starts Using Storage
-```
-
-From the Linux operating system perspective, an EBS volume behaves exactly like a physical disk.
-
-Example:
-
-```text
-/dev/xvdf
-/dev/xvdg
-/dev/nvme1n1
-```
-
-After attaching the volume, Linux administrators perform:
-
-```bash
-lsblk
-fdisk
-mkfs
-mount
-df -h
-```
----
-
 # EBS Volume Mounting & Unmounting
 
 ## 📌 EBS Volume Mounting
@@ -217,7 +173,6 @@ Example:
 /dev/nvme0n1 → Root/OS disk
 /dev/nvme1n1 → New EBS volume
 ```
-
 #### Step 2: Check the Filesystem
 
 ```bash
@@ -258,7 +213,6 @@ EBS → Raw disk
 After:
 EBS → XFS filesystem → Ready for mounting
 ```
-
 #### Step 4: Create a Mount Point
 
 ```bash
@@ -285,11 +239,10 @@ EBS → XFS filesystem → Ready for mounting
 or:
 
 ```bash
-mount | grep /myebsvol
+# mount | grep /myebsvol
 ```
----
 
-## 🔄 Complete Mounting Flow
+# 🔄 Complete Mounting Flow
 
 ```text
 Create EBS
@@ -297,7 +250,7 @@ Create EBS
 Attach EBS to EC2 over the AWS.
     ↓
 fdisk -l
-(Find /dev/nvme1n1)
+(Linux Detects Disk. Find /dev/nvme1n1)
     ↓
 file -s
 (Check filesystem)
@@ -311,6 +264,26 @@ mkdir /myebsvol
 mount /dev/nvme1n1 /myebsvol
     ↓
 EBS is ready to use
+```
+
+From the Linux operating system perspective, an EBS volume behaves exactly like a physical disk.
+
+Example:
+
+```text
+/dev/xvdf
+/dev/xvdg
+/dev/nvme1n1
+```
+
+After attaching the volume, Linux administrators perform:
+
+```bash
+lsblk
+fdisk
+mkfs
+mount
+df -h
 ```
 ---
 
@@ -402,7 +375,6 @@ Detach Volume
 The EBS volume is now detached from the EC2 instance.
 
 ---
-
 # ⚠️ Important Difference
 
 #### `umount`
@@ -410,7 +382,6 @@ The EBS volume is now detached from the EC2 instance.
 ```bash
 # sudo umount /myebsvol
 ```
-
 **Unmounts** the filesystem.
 
 * Does NOT delete EBS
@@ -434,7 +405,6 @@ Detaches the EBS from the EC2 instance.
 
 * EBS still exists in AWS.
 * Data remains on the EBS.
-
 ---
 
 > **Mount = Make EBS available to Linux**
@@ -443,7 +413,6 @@ Detaches the EBS from the EC2 instance.
 
 ```
 ```
-
 ---
 
 # EBS Architecture
