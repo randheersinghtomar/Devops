@@ -149,6 +149,7 @@ AWS provides EBS to store this information reliably.
 - Cost-effective HDD Options
 
 ---
+---
 
 # EBS Volume Mounting & Unmounting
 
@@ -285,7 +286,6 @@ mkfs
 mount
 df -h
 ```
----
 
 # 📌 EBS Volume Unmounting
 
@@ -374,7 +374,6 @@ Detach Volume
 
 The EBS volume is now detached from the EC2 instance.
 
----
 # ⚠️ Important Difference
 
 #### `umount`
@@ -413,6 +412,7 @@ Detaches the EBS from the EC2 instance.
 
 ```
 ```
+---
 ---
 
 # EBS Architecture
