@@ -404,11 +404,93 @@ Detaches the EBS from the EC2 instance.
 
 * EBS still exists in AWS.
 * Data remains on the EBS.
----
 
 > **Mount = Make EBS available to Linux**
 > **Unmount = Stop making EBS available through that mount point**
 > **Detach = Disconnect EBS from EC2**
+
+```
+```
+---
+
+# Extend EBS Volume
+
+To increase an EBS volume from **10 GB → 20 GB**:
+
+> **Increase EBS → Extend Partition (if required) → Extend Filesystem → Verify**
+
+### 1. Increase EBS Size
+
+AWS Console:
+
+```text
+EC2 → Volumes → Select EBS → Actions → Modify Volume
+→ Change Size → Modify
+````
+
+Example:
+
+```text
+10 GB → 20 GB
+```
+
+> No need to unmount the volume for increasing EBS size.
+
+### 2. Verify Disk Size
+
+```bash
+# lsblk
+```
+
+Check that the EBS volume now shows the increased size. But filesystem still did not show the increased usable space (#df -h).
+
+### 3. Extend Partition (If Partition Exists)
+
+If the volume has a partition such as `/dev/nvme1n1p1`:
+
+```bash
+# sudo growpart /dev/nvme1n1 1
+```
+
+> If there is no partition, skip this step.
+
+### 4. Extend Filesystem
+
+#### XFS
+
+```bash
+# sudo xfs_growfs /myebsvol
+```
+
+#### ext4
+
+```bash
+# sudo resize2fs /dev/nvme1n1p1
+```
+
+### 5. Verify
+
+```bash
+# df -h
+```
+
+The filesystem should now show the increased usable space.
+
+### 🧠 Easy to Remember
+
+```text
+AWS Console → Increase EBS
+       ↓
+lsblk → Check size
+       ↓
+growpart → Extend partition (if required)
+       ↓
+xfs_growfs / resize2fs → Extend filesystem
+       ↓
+df -h → Verify
+```
+
+> **Important:** Increasing the EBS volume size does not automatically increase the filesystem size.
 
 ```
 ```
