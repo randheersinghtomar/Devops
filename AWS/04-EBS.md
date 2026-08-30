@@ -242,6 +242,7 @@ or:
 ```bash
 # mount | grep /myebsvol
 ```
+NOTE:- For a production server, I'd also configure /etc/fstab so the volume is automatically mounted after reboot.
 
 # 🔄 Complete Mounting Flow
 
