@@ -33,6 +33,39 @@ CloudWatch
  ↓
 Monitor → Analyze → Alert → Take Action
 ````
+---
+
+### CPU vs RAM vs Disk
+
+This is very important for interviews:
+
+```text
+             Server
+               |
+       ┌───────┼───────┐
+       ↓       ↓       ↓
+      CPU     RAM     Disk
+      |        |       |
+   Process   Hold    Store
+   /execute  data    data
+````
+
+**CPU:** "I process/execute."
+
+**RAM:** "I temporarily hold data and programs that are being used."
+
+**Disk/EBS:** "I permanently store data."
+
+### 🧠 Best Way to Remember
+
+> **CPU = Executes the application's instructions.**
+>
+> **RAM = Holds the application's currently used data/instructions.**
+>
+> **Disk = Stores the application's data permanently.**
+
+```
+```
 
 ---
 
