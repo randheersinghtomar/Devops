@@ -460,6 +460,8 @@ If the volume has a partition such as `/dev/nvme1n1p1`:
 
 ```bash
 # sudo xfs_growfs /myebsvol
+                       \
+                     (Mount Point)
 ```
 
 #### ext4
