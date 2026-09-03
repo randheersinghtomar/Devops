@@ -131,23 +131,33 @@
 
 ---
 
-## 9. Network Troubleshooting
+## 9. Network Troubleshooting — Very Important
 
-* Server Cannot Reach Another Server
-* Ping Fails
-* DNS Resolution Fails
-* Server Can Ping IP but Cannot Resolve Hostname
-* Server Can Resolve Hostname but Cannot Connect to Port
-* SSH Connection Times Out
-* SSH Gives `Connection Refused`
-* Application Is Listening but Remote Clients Cannot Connect
-* Website Works Using IP but Not Hostname
-* High Network Latency
-* Packet Loss
-* Network Interface Problems
-* Routing Problems
-* DNS Problems
-* Using `tcpdump` to Troubleshoot Connectivity
+- Host Cannot Reach Another Host
+- Ping Fails
+- DNS Issues
+- DNS Resolution Fails
+- DNS Works but Application Doesn't
+- Port Is Not Reachable
+- Connection Timeout vs Connection Refused
+- Network Interface Issues
+- Routing Issues
+- High Network Latency
+- Packet Loss
+- Using `tcpdump` to Troubleshoot
+
+## 10. Practical Interview Scenarios
+
+- Server Can Ping IP but Cannot Resolve Hostname
+- Server Can Resolve Hostname but Cannot Connect to Port
+- SSH Connection Is Timing Out
+- SSH Gives `Connection Refused`
+- Website Is Reachable by IP but Not Hostname
+- Application Is Listening but Remote Clients Cannot Connect
+- High Network Latency Between Servers
+- Packet Loss Investigation
+- Finding Which Process Is Using a Port
+- Troubleshooting a Linux Server With No Network Connectivity
 
 ---
 ---
