@@ -1,1 +1,101 @@
+# AWS + Linux Cloud Engineer — Networking Interview Index
 
+## 1. Networking Fundamentals
+- LAN, WAN
+- IP Address
+- MAC Address & ARP
+- Private vs Public IP
+- TCP vs UDP
+- Ports & Protocols
+- OSI & TCP/IP Model
+- TCP 3-Way Handshake
+- DNS, HTTP/HTTPS & TLS
+
+## 2. IP Addressing & Subnetting
+- IPv4 & IPv6
+- CIDR
+- Subnet Mask
+- Network & Host
+- Private IP Ranges
+- Subnetting
+- Usable IP Calculation
+
+## 3. AWS VPC
+- VPC & CIDR
+- Subnets
+- Public vs Private Subnet
+- Availability Zones
+- ENI
+- Default vs Custom VPC
+- DHCP Options
+
+## 4. Routing & Internet Access
+- Route Tables
+- Local Routes
+- Internet Gateway (IGW)
+- NAT Gateway
+- Elastic IP
+- Public vs Private Routing
+
+## 5. AWS Network Security
+- Security Groups
+- NACL
+- Security Group vs NACL
+- Stateful vs Stateless
+- Ephemeral Ports
+
+## 6. DNS & Route 53
+- DNS Basics
+- Route 53
+- A, AAAA, CNAME, MX, TXT
+- Public vs Private Hosted Zones
+- Routing Policies
+
+## 7. Load Balancing
+- ALB
+- NLB
+- Target Groups
+- Listeners
+- Health Checks
+- ALB vs NLB
+
+## 8. VPC Connectivity
+- VPC Peering
+- Transit Gateway
+- Site-to-Site VPN
+- Direct Connect
+- Non-overlapping CIDR
+
+## 9. Private AWS Connectivity
+- VPC Endpoints
+- Gateway Endpoint
+- Interface Endpoint
+- AWS PrivateLink
+
+## 10. Linux Networking
+- `ip addr`
+- `ip route`
+- `ping`
+- `traceroute`
+- `ss`
+- `netstat`
+- `nslookup`
+- `dig`
+- `curl`
+- `nc`
+- `/etc/hosts`
+- `/etc/resolv.conf`
+- Linux Firewall Basics
+
+## 11. Network Troubleshooting
+- EC2 Internet Connectivity
+- Private EC2 → Internet
+- EC2 → EC2 Connectivity
+- DNS Troubleshooting
+- Route Table Troubleshooting
+- Security Group & NACL Troubleshooting
+- Port/Service Connectivity
+- Linux Firewall Troubleshooting
+
+---
+---
