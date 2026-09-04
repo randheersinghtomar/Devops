@@ -124,11 +124,433 @@
 
 
 
+# 1. VPC Fundamentals
+
+## 1.1 What is VPC?
+
+**VPC = Virtual Private Cloud**
+
+An AWS VPC is a **logically isolated virtual network inside AWS** where you launch and control AWS resources such as:
+
+- EC2
+- RDS
+- Load Balancers
+- ECS
+- etc.
+
+Think of a VPC as **your own private network in AWS**, similar to a network you would create in a data center.
+
+### Simple Example
+
+```text
+                AWS
+                 |
+              VPC
+        10.0.0.0/16
+                 |
+       +---------+---------+
+       |                   |
+ Public Subnet        Private Subnet
+ 10.0.1.0/24           10.0.2.0/24
+       |                   |
+     Web EC2             DB EC2
+````
+
+The VPC gives you control over:
+
+* IP address ranges
+* Subnets
+* Routing
+* Internet connectivity
+* Network security
+* Communication between resources
+
+### Important
+
+A VPC itself is **regional**.
+
+You can create subnets in multiple Availability Zones inside the same Region.
+
+```text
+VPC
+ |
+ +-- AZ-1
+ |    └── Subnet
+ |
+ +-- AZ-2
+      └── Subnet
+```
+
+---
+
+# 1.2 Default VPC vs Custom VPC
+
+When you create an AWS account, AWS provides a **Default VPC** in each Region.
+
+## Default VPC
+
+AWS creates several networking components for you automatically, such as:
+
+* VPC
+* Subnets
+* Route tables
+* Internet Gateway
+* Default security group
+
+It is designed to make it easy to launch an EC2 instance without manually building the entire network.
+
+Example:
+
+```text
+Default VPC
+10.0.0.0/16
+      |
+      +-- Subnet AZ-1
+      |
+      +-- Subnet AZ-2
+      |
+      +-- Internet Gateway
+```
+
+## Custom VPC
+
+A **Custom VPC** is a VPC that you design yourself.
+
+You decide:
+
+* CIDR range
+* Number of subnets
+* Public/private subnet structure
+* Route tables
+* Internet Gateway
+* NAT Gateway
+* Security controls
+* VPC endpoints
+* Connectivity options
+
+Example:
+
+```text
+Custom VPC
+10.0.0.0/16
+      |
+      +-- Public Subnet
+      |      └── Web Server
+      |
+      +-- Private Subnet
+             └── Application Server
+```
+
+### Interview Difference
+
+| Default VPC                       | Custom VPC                       |
+| --------------------------------- | -------------------------------- |
+| AWS creates it automatically      | You create and design it         |
+| Basic networking is preconfigured | You configure networking         |
+| Easy for beginners                | Used for controlled architecture |
+| Quick EC2 deployment              | Production architectures         |
+
+### Interview Answer
+
+> A Default VPC is automatically created by AWS with basic networking components, while a Custom VPC is designed and configured by us according to the application's networking and security requirements.
+
+---
+
+# 1.3 VPC CIDR Block
+
+**CIDR = Classless Inter-Domain Routing**
+
+The CIDR block defines the **IP address range available inside your VPC**.
+
+Example:
+
+```text
+10.0.0.0/16
+```
+
+This means the VPC has an IP address range from:
+
+```text
+10.0.0.0
+        ↓
+10.0.255.255
+```
+
+That's **65,536 total IPv4 addresses**.
+
+You can divide this VPC into smaller subnets.
+
+### Example
+
+VPC:
+
+```text
+10.0.0.0/16
+```
+
+Public subnet:
+
+```text
+10.0.1.0/24
+```
+
+Private subnet:
+
+```text
+10.0.2.0/24
+```
+
+Another private subnet:
+
+```text
+10.0.3.0/24
+```
+
+So:
+
+```text
+VPC: 10.0.0.0/16
+│
+├── Public Subnet
+│   └── 10.0.1.0/24
+│
+├── Private Subnet
+│   └── 10.0.2.0/24
+│
+└── Private Subnet
+    └── 10.0.3.0/24
+```
+
+### Important Interview Point
+
+**Subnet CIDR must be within the VPC CIDR and cannot overlap with another subnet in the same VPC.**
+
+Example:
+
+```text
+VPC:             10.0.0.0/16
+
+Subnet 1:        10.0.1.0/24   ✅
+Subnet 2:        10.0.2.0/24   ✅
+Subnet 3:        10.0.1.0/24   ❌ Overlapping
+```
+
+### Common CIDR Ranges
+
+You will commonly see:
+
+```text
+10.0.0.0/16
+172.16.0.0/16
+192.168.0.0/16
+```
+
+These are private IPv4 ranges.
+
+---
+
+# 1.4 IPv4 & IPv6
+
+AWS VPC supports both **IPv4 and IPv6**.
+
+## IPv4
+
+IPv4 uses **32-bit addresses**.
+
+Example:
+
+```text
+10.0.1.10
+```
+
+A common VPC configuration:
+
+```text
+VPC
+10.0.0.0/16
+```
+
+An EC2 instance might receive:
+
+```text
+Private IP: 10.0.1.10
+```
+
+IPv4 can be:
+
+* Private IPv4
+* Public IPv4
+* Elastic IP
+
+### Private IPv4
+
+Used for communication inside private networks.
+
+Example:
+
+```text
+EC2
+10.0.1.10
+   |
+   | Private communication
+   ↓
+Database
+10.0.2.10
+```
+
+---
+
+## IPv6
+
+IPv6 uses **128-bit addresses**.
+
+Example:
+
+```text
+2001:db8:1234:1::10
+```
+
+IPv6 provides a much larger address space than IPv4.
+
+One important difference:
+
+> IPv6 addresses are globally unique, so AWS does not use private IPv6 addresses in the same way it does private IPv4.
+
+For AWS VPC design, IPv6 can be used alongside IPv4 in a **dual-stack** architecture.
+
+```text
+EC2
+ |
+ +-- IPv4: 10.0.1.10
+ |
+ └-- IPv6: 2001:db8:...
+```
+
+### Interview Point
+
+If an interviewer asks:
+
+**"Does AWS VPC support IPv6?"**
+
+Answer:
+
+> Yes. AWS VPC supports IPv4 and IPv6, and a VPC can be configured for dual-stack networking.
+
+---
+
+# 1.5 Public vs Private Network
+
+This is **very important for AWS interviews**.
+
+## Public Network
+
+A subnet is commonly called a **public subnet** when its route table has a route to an **Internet Gateway (IGW)**.
+
+Example:
+
+```text
+Internet
+   |
+   ↓
+Internet Gateway
+   |
+   ↓
+Public Subnet
+   |
+   ↓
+EC2
+```
+
+Route table:
+
+```text
+Destination       Target
+
+10.0.0.0/16       local
+0.0.0.0/0         Internet Gateway
+```
+
+### Important Point
+
+> **A subnet is public because of its routing, not simply because the subnet has a public IP.**
+
+---
+
+## Private Network
+
+A private subnet does **not have a direct route to an Internet Gateway**.
+
+Example:
+
+```text
+Private Subnet
+      |
+      ↓
+EC2
+```
+
+For outbound internet access, a private subnet commonly uses a **NAT Gateway**:
+
+```text
+Private EC2
+    |
+    ↓
+NAT Gateway
+    |
+    ↓
+Internet Gateway
+    |
+    ↓
+Internet
+```
+
+The private EC2 can initiate outbound connections, but it is not directly reachable from the internet through the NAT Gateway.
+
+---
+
+# Public vs Private — Easy Comparison
+
+| Public Subnet                         | Private Subnet                                  |
+| ------------------------------------- | ----------------------------------------------- |
+| Route to IGW                          | No direct route to IGW                          |
+| Can host internet-facing resources    | Usually hosts internal resources                |
+| Example: Web server                   | Example: Application/DB server                  |
+| Can have public IPv4/EIP              | Usually uses private IP                         |
+| Direct internet connectivity possible | NAT Gateway commonly used for outbound internet |
+
+---
+
+# ⭐ Key Interview Points
+
+Remember these:
+
+1. **VPC is a logically isolated network in AWS.**
+2. **VPC is regional; subnets belong to Availability Zones.**
+3. **CIDR defines the IP address range of the VPC/subnet.**
+4. **Subnet CIDRs must not overlap within a VPC.**
+5. **Default VPC is provided by AWS with basic networking configured.**
+6. **Custom VPC is designed and configured according to requirements.**
+7. **A public subnet has a route to an Internet Gateway.**
+8. **A private subnet has no direct route to an Internet Gateway.**
+9. **NAT Gateway provides outbound internet access for private resources.**
+10. **IPv4 and IPv6 are supported by AWS VPC.**
+
+---
+
+# 🎯 One-line VPC Story
+
+Think of it like this:
+
+**VPC = Your AWS network → Subnet = Network section → Route Table = Traffic direction → IGW = Internet door → NAT Gateway = Private network's outbound door → Security Group/NACL = Security controls.**
 
 
 
 
 
+
+
+---
+---
 # AWS VPC - Day 01
 
 > In this module, we will learn the fundamentals of Amazon VPC, why it is required, the difference between Default and Custom VPC, CIDR, Subnets, and create our own custom VPC from scratch.
