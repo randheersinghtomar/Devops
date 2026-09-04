@@ -1,3 +1,134 @@
+
+# AWS VPC — Short Complete Index
+
+## 1. VPC Fundamentals
+
+- What is VPC?
+- Default VPC vs Custom VPC
+- VPC CIDR Block
+- IPv4 & IPv6
+- Public vs Private Network
+
+## 2. Subnets
+
+- What is Subnet?
+- Public vs Private Subnet
+- Subnet CIDR
+- Availability Zone
+- Subnet Route Table Association
+- Reserved IP Addresses
+
+## 3. Routing & Internet Access ⭐
+
+- Route Table
+- Local Route
+- Internet Gateway (IGW)
+- NAT Gateway
+- Elastic IP
+- Public vs Private Routing
+- Internet Access from Public/Private Subnets
+
+## 4. VPC Security ⭐
+
+- Security Groups
+- Network ACL (NACL)
+- Security Group vs NACL
+- Stateful vs Stateless
+- Inbound & Outbound Rules
+
+## 5. VPC Networking Components
+
+- ENI (Elastic Network Interface)
+- Private IP & Public IP
+- Elastic IP
+- DNS Resolution & DNS Hostnames
+- DHCP Options — Basics
+
+## 6. VPC Connectivity ⭐
+
+- VPC Peering
+- Transit Gateway
+- Site-to-Site VPN
+- AWS Direct Connect
+- VPC Endpoint
+  - Gateway Endpoint
+  - Interface Endpoint
+
+## 7. Load Balancing & VPC
+
+- ALB in VPC
+- NLB in VPC
+- Internet-facing vs Internal Load Balancer
+- Load Balancer + Public/Private Subnets
+
+## 8. VPC Monitoring & Troubleshooting ⭐
+
+- VPC Flow Logs
+- Reachability Analyzer — Basics
+- Troubleshooting SSH Connection
+- Troubleshooting Internet Access
+- Troubleshooting Private Subnet Access
+- Troubleshooting Security Group/NACL
+- Troubleshooting Route Table
+
+## 9. High Availability & Design ⭐
+
+- Multi-AZ VPC Design
+- Public + Private Subnet Architecture
+- NAT Gateway per AZ
+- Bastion Host — Basics
+- Highly Available VPC Architecture
+
+## 10. Practical Interview Scenarios ⭐
+
+- Create a Custom VPC
+- Launch EC2 in Public Subnet
+- Launch EC2 in Private Subnet
+- Give Private EC2 Internet Access
+- Connect to Private EC2
+- Allow Public EC2 → Private EC2
+- Configure VPC Peering
+- Troubleshoot "EC2 Cannot Reach Internet"
+- Troubleshoot "SSH Not Working"
+
+---
+
+## ⭐ Most Important Topics
+
+- VPC
+- CIDR
+- Subnets
+- Route Tables
+- Internet Gateway (IGW)
+- NAT Gateway
+- Elastic IP
+- Security Groups
+- NACL
+- ENI
+- Bastion Host
+- VPC Peering
+- VPC Endpoints
+  - Gateway Endpoint
+  - Interface Endpoint
+- Transit Gateway
+- Site-to-Site VPN
+- AWS Direct Connect
+- VPC Flow Logs
+- VPC Troubleshooting
+- Multi-AZ VPC Design
+
+
+---
+---
+---
+
+
+
+
+
+
+
+
 # AWS VPC - Day 01
 
 > In this module, we will learn the fundamentals of Amazon VPC, why it is required, the difference between Default and Custom VPC, CIDR, Subnets, and create our own custom VPC from scratch.
