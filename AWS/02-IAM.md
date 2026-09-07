@@ -320,7 +320,7 @@ Developers
 
 ---
 
-### 3. Attached AWS Managed Policy
+### 3. Attached AWS Managed Policy to the group
 
 ```
 AmazonEC2ReadOnlyAccess
