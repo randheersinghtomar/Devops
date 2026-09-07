@@ -27,7 +27,6 @@ Hard disk, USB, Pendrive are examples of DAS.
 
 → **<ins>Instance storage</ins>** -  Ephemeral disks that come with an EC2 instance (data is lost when instance stops)
 
-(It is like giving water bottles to each)
 
 ```text
                     EC2 instance
