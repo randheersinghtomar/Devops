@@ -1,3 +1,95 @@
+## 1. ELB Basics
+
+* What is Load Balancer?
+* Why ELB?
+* How ELB works
+* ELB components
+
+## 2. Types of Load Balancers ⭐
+
+* ALB
+* NLB
+* GWLB
+* ALB vs NLB vs GWLB
+
+## 3. ALB ⭐
+
+* Layer 7
+* Internet-facing vs Internal
+* Listeners
+* Target Groups
+* Targets
+* HTTP/HTTPS
+
+## 4. ALB Routing ⭐
+
+* Host-based routing
+* Path-based routing
+* Listener rules
+* Redirect / Fixed Response
+
+## 5. Health Checks ⭐
+
+* Health check configuration
+* Healthy / Unhealthy targets
+* Common health-check failures
+* `503`, `502`, `504`
+
+## 6. Security ⭐
+
+* ALB Security Group
+* EC2 Security Group
+* ALB → EC2 traffic
+* Ports & HTTPS
+* SSL/TLS termination
+
+## 7. Important Features
+
+* Cross-Zone Load Balancing
+* Sticky Sessions
+* Deregistration Delay
+* Connection Draining
+
+## 8. ELB + AWS Services
+
+* ELB + Auto Scaling
+* ELB + Route 53
+* ELB + CloudWatch
+* ELB + WAF
+
+## 9. Troubleshooting ⭐⭐⭐
+
+* Target unhealthy
+* ALB not reaching EC2
+* Application works directly but not through ALB
+* `502` / `503` / `504`
+* Timeout vs Connection Refused
+* High response time
+
+## 10. Advanced — Know Basics
+
+* NLB static IP
+* GWLB
+* Blue/Green deployment
+* Canary deployment
+
+
+### Interview Priority
+
+Focus heavily on:
+
+**ALB → Target Groups → Listeners → Health Checks → Security → Troubleshooting → ALB vs NLB**
+
+
+
+
+
+
+
+
+
+---
+---
 
 
 ## What is Elastic Load Balancer (ELB)?
