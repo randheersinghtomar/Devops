@@ -1,4 +1,4 @@
-````markdown
+
 # “What is your current infrastructure?”
 
 Currently, I work in a **hybrid production environment** consisting of **AWS cloud infrastructure** and **third-party data-center-hosted infrastructure**.
