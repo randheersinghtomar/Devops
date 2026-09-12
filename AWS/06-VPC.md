@@ -546,7 +546,19 @@ Remember these:
 
 Think of it like this:
 
-**VPC = Your AWS network → Subnet = Network section → Route Table = Traffic direction → IGW = Internet door → NAT Gateway = Private network's outbound door → Security Group/NACL = Security controls.**
+
+### Think of VPC like a House
+
+| AWS Component | Simple Example |
+|---|---|
+| **VPC** | Your house/property |
+| **Subnet** | Different rooms/sections |
+| **EC2** | Computer inside the house |
+| **Route Table** | Decides where traffic should go |
+| **Internet Gateway** | Door to the internet |
+| **Security Group** | Security guard/firewall |
+| **NAT Gateway** | Allows private resources to access the internet without being directly reachable |
+
 
 ---
 
