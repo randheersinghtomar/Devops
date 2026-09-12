@@ -10,19 +10,137 @@ AWS enables organizations to build, deploy, and scale applications without inves
 
 ## Table of Contents
 
-1. What is Cloud Computing?
-2. Traditional Infrastructure vs Cloud Computing
-3. Benefits of Cloud Computing
-4. Types of Cloud Computing
-5. Cloud Service Models (IaaS, PaaS, SaaS)
-6. What is AWS?
-7. AWS Global Infrastructure
-8. AWS Shared Responsibility Model
-9. AWS Free Tier
-10. AWS Use Cases
-11. AWS Best Practices
-12. Interview Questions
-13. Summary
+1. What is virtualization?
+2. What is Cloud Computing?
+3. Traditional Infrastructure vs Cloud Computing
+4. Benefits of Cloud Computing
+5. Types of Cloud Computing
+6. Cloud Service Models (IaaS, PaaS, SaaS)
+7. What is AWS?
+8. AWS Global Infrastructure
+9. AWS Shared Responsibility Model
+10. AWS Free Tier
+11. AWS Use Cases
+12. AWS Best Practices
+13. Interview Questions
+14. Summary
+
+
+---
+
+# Virtualization
+
+**Virtualization** is a technology that allows us to create **multiple virtual computers (Virtual Machines/VMs) on a single physical server**.
+
+Each VM behaves like an independent computer with its own:
+
+- CPU
+- RAM
+- Disk
+- Operating System
+- Network
+
+## Simple Example
+
+```text
+          Physical Server
+       ┌───────────────────┐
+       │ CPU: 16 Cores     │
+       │ RAM: 64 GB        │
+       │ Disk: 1 TB        │
+       └─────────┬─────────┘
+                 │
+            Hypervisor
+                 │
+       ┌─────────┼─────────┐
+       ↓         ↓         ↓
+     VM-1      VM-2      VM-3
+   Ubuntu      RHEL     Windows
+   4 CPU       4 CPU     4 CPU
+   16 GB       16 GB     16 GB
+````
+
+Instead of using **one physical server for one OS**, virtualization allows us to run **multiple VMs on the same physical hardware**.
+
+
+# What is a Hypervisor?
+
+A **hypervisor** is software that **creates and manages Virtual Machines (VMs)**.
+
+It allocates physical resources such as:
+
+* CPU
+* RAM
+* Storage
+* Network
+
+to each VM.
+
+There are **2 main types of hypervisors**:
+
+
+# 1. Type 1 — Bare-Metal Hypervisor
+
+A **Type 1 hypervisor runs directly on the physical hardware**, without requiring a host operating system.
+
+```text
+Physical Hardware
+       ↓
+   Hypervisor
+       ↓
+ ┌─────┼─────┐
+ VM1   VM2   VM3
+```
+
+### Examples
+
+* VMware ESXi
+* Microsoft Hyper-V
+* KVM
+* Xen
+
+**Commonly used in:** Data centers, production servers, and cloud environments.
+
+
+# 2. Type 2 — Hosted Hypervisor
+
+A **Type 2 hypervisor runs on top of an existing Host Operating System**.
+
+```text
+Physical Hardware
+       ↓
+Host OS (Windows/Linux/macOS)
+       ↓
+   Hypervisor
+       ↓
+ ┌─────┼─────┐
+ VM1   VM2   VM3
+```
+
+### Examples
+
+* Oracle VirtualBox
+* VMware Workstation
+* VMware Fusion
+* Parallels Desktop
+
+**Commonly used in:** Laptops/desktops, development, and testing.
+
+
+# Type 1 vs Type 2
+
+| Feature     | Type 1                  | Type 2                         |
+| ----------- | ----------------------- | ------------------------------ |
+| Runs on     | Directly on hardware    | On top of Host OS              |
+| Performance | Higher                  | Lower compared to Type 1       |
+| Usage       | Production/Data Centers | Desktop/Testing                |
+| Examples    | ESXi, Hyper-V, KVM, Xen | VirtualBox, VMware Workstation |
+
+---
+
+# Interview Answer
+
+> **"Virtualization is a technology that allows us to run multiple virtual machines on a single physical server. A hypervisor creates and manages these VMs and allocates resources like CPU, RAM, storage, and network to them. There are two types of hypervisors: Type 1, which runs directly on physical hardware, and Type 2, which runs on top of a host operating system."**
 
 ---
 
