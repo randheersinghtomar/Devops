@@ -163,7 +163,6 @@
 ---
 
 
-````md
 # Networking Fundamentals
 
 For a **4-year Linux + AWS Cloud Engineer interview**, focus on networking concepts useful for troubleshooting **EC2, VPC, Load Balancers, Security Groups, ports, routing, and Linux networking**.
@@ -528,7 +527,6 @@ Internet    → IP
 Network     → Ethernet, MAC
 ```
 
----
 
 # ⭐ What to Focus on for AWS/Linux Interviews
 
@@ -579,8 +577,6 @@ Is routing correct?
         ↓
 Route Table / Gateway
 ```
-
----
 
 # Important Linux Networking Commands
 
@@ -646,22 +642,4 @@ Trace the network path to a destination.
 traceroute <IP>
 ```
 
----
 
-# Interview Priority
-
-For a **4-year Linux + AWS Cloud Engineer**, prioritize:
-
-1. **IP Address & Subnet**
-2. **TCP vs UDP**
-3. **Ports & Sockets**
-4. **DNS**
-5. **Routing & Gateway**
-6. **OSI Model**
-7. **Security Groups & Firewalls**
-8. **Switch vs Router**
-9. **Network Troubleshooting Commands**
-10. **AWS VPC Networking**
-
-```
-```
