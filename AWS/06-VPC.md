@@ -123,7 +123,6 @@
 ---
 
 
-
 # 1. VPC Fundamentals
 
 ## 1.1 What is VPC?
@@ -411,8 +410,6 @@ Database
 10.0.2.10
 ```
 
----
-
 ## IPv6
 
 IPv6 uses **128-bit addresses**.
@@ -487,8 +484,6 @@ Destination       Target
 
 > **A subnet is public because of its routing, not simply because the subnet has a public IP.**
 
----
-
 ## Private Network
 
 A private subnet does **not have a direct route to an Internet Gateway**.
@@ -519,7 +514,6 @@ Internet
 
 The private EC2 can initiate outbound connections, but it is not directly reachable from the internet through the NAT Gateway.
 
----
 
 # Public vs Private — Easy Comparison
 
@@ -531,7 +525,6 @@ The private EC2 can initiate outbound connections, but it is not directly reacha
 | Can have public IPv4/EIP              | Usually uses private IP                         |
 | Direct internet connectivity possible | NAT Gateway commonly used for outbound internet |
 
----
 
 # ⭐ Key Interview Points
 
@@ -548,7 +541,6 @@ Remember these:
 9. **NAT Gateway provides outbound internet access for private resources.**
 10. **IPv4 and IPv6 are supported by AWS VPC.**
 
----
 
 # 🎯 One-line VPC Story
 
@@ -556,6 +548,7 @@ Think of it like this:
 
 **VPC = Your AWS network → Subnet = Network section → Route Table = Traffic direction → IGW = Internet door → NAT Gateway = Private network's outbound door → Security Group/NACL = Security controls.**
 
+---
 
 # VPC Architecture
 
@@ -573,7 +566,6 @@ Think of it like this:
         │   10.0.2.0/24                  │
         └────────────────────────────────┘
 ```
----
 
 # Lab Goal
 
@@ -594,8 +586,6 @@ Architecture:
  10.0.1.0/24        10.0.2.0/24
 ```
 
----
-
 # Prerequisites
 
 Before starting the lab ensure:
@@ -605,7 +595,6 @@ Before starting the lab ensure:
 - Region selected
 - EC2 Key Pair already created
 
----
 
 # Hands-on Lab - Create Custom VPC
 
@@ -615,7 +604,6 @@ In this lab we will create the following resources:
 - Public Subnet
 - Private Subnet
 
----
 
 # Step 1 - Open VPC Dashboard
 
@@ -632,8 +620,6 @@ Open
 ```
 VPC Dashboard
 ```
-
----
 
 # Step 2 - Create Custom VPC
 
@@ -677,8 +663,6 @@ Click
 Create VPC
 ```
 
----
-
 # Verify
 
 After creation verify
@@ -695,8 +679,6 @@ CIDR
 10.0.0.0/16
 ```
 
----
-
 # Production Note
 
 Always choose a CIDR that will not overlap with:
@@ -706,8 +688,6 @@ Always choose a CIDR that will not overlap with:
 - Future AWS Accounts
 
 Changing CIDR later is difficult.
-
----
 
 # Step 3 - Create Public Subnet
 
@@ -749,8 +729,6 @@ Click
 Create Subnet
 ```
 
----
-
 # Verify
 
 Check
@@ -765,8 +743,6 @@ CIDR
 10.0.1.0/24
 ```
 
----
-
 # Why Public Subnet?
 
 Resources placed here require direct Internet access.
@@ -777,8 +753,6 @@ Examples
 - Load Balancer
 - NAT Gateway
 - Public EC2
-
----
 
 # Step 4 - Create Private Subnet
 
@@ -810,8 +784,6 @@ Click
 Create Subnet
 ```
 
----
-
 # Verify
 
 ```
@@ -819,8 +791,6 @@ Private-Subnet
 
 10.0.2.0/24
 ```
-
----
 
 # Why Private Subnet?
 
@@ -833,7 +803,6 @@ Examples
 - Internal APIs
 - Backend Services
 
----
 
 # Verify VPC Architecture
 
@@ -848,7 +817,6 @@ Examples
  10.0.1.0/24                  10.0.2.0/24
 ```
 
----
 
 # What We Created
 
@@ -870,7 +838,6 @@ Examples
 10.0.2.0/24
 ```
 
----
 
 # AWS Console Navigation
 
@@ -900,7 +867,6 @@ Subnets
 - Use meaningful resource names.
 - Create separate subnets for different Availability Zones.
 
----
 
 # Common Mistakes
 
@@ -911,6 +877,7 @@ Subnets
 ❌ Not planning IP ranges before deployment.
 
 ❌ Using Default VPC for Production.
+
 
 
 
