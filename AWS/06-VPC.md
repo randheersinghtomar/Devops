@@ -181,6 +181,19 @@ VPC
       └── Subnet
 ```
 
+## Why do we need VPC?
+
+Without VPC, every server would be in a common network, making it difficult to secure applications.
+
+Using VPC we can:
+
+- Isolate applications
+- Create Public and Private Networks
+- Secure databases
+- Control inbound and outbound traffic
+- Connect AWS with On-Premises
+- Design Production Architecture
+
 ---
 
 # 1.2 Default VPC vs Custom VPC
@@ -544,121 +557,6 @@ Think of it like this:
 **VPC = Your AWS network → Subnet = Network section → Route Table = Traffic direction → IGW = Internet door → NAT Gateway = Private network's outbound door → Security Group/NACL = Security controls.**
 
 
-
-
-
-
-
----
----
-# AWS VPC - Day 01
-
-> In this module, we will learn the fundamentals of Amazon VPC, why it is required, the difference between Default and Custom VPC, CIDR, Subnets, and create our own custom VPC from scratch.
-
----
-
-
-# What is Amazon VPC?
-
-Amazon VPC (Virtual Private Cloud) is a logically isolated virtual network inside AWS where we can launch AWS resources like:
-
-- EC2
-- RDS
-- Load Balancer
-- Lambda
-- ECS
-- EKS
-
-A VPC gives complete control over your network such as:
-
-- IP Address Range
-- Subnets
-- Route Tables
-- Internet Connectivity
-- Security
-- Network Isolation
-
-Think of a VPC as your own private data center inside AWS.
-
----
-
-# Why do we need VPC?
-
-Without VPC, every server would be in a common network, making it difficult to secure applications.
-
-Using VPC we can:
-
-- Isolate applications
-- Create Public and Private Networks
-- Secure databases
-- Control inbound and outbound traffic
-- Connect AWS with On-Premises
-- Design Production Architecture
-
----
-
-# Default VPC vs Custom VPC
-
-| Default VPC | Custom VPC |
-|-------------|------------|
-| Created automatically by AWS | Created manually by user |
-| Ready to use | Fully customizable |
-| Public subnets already available | You create your own subnets |
-| Internet Gateway already attached | IGW must be attached manually |
-| Suitable for testing | Suitable for production |
-
----
-
-# CIDR Block
-
-CIDR (Classless Inter-Domain Routing) defines the IP address range of a VPC.
-
-Example:
-
-```
-10.0.0.0/16
-```
-
-Meaning
-
-```
-Network Address : 10.0.0.0
-
-Subnet Mask
-
-255.255.0.0
-```
-
-Total IPs
-
-```
-65,536
-```
-
-AWS reserves the first four IP addresses and the last IP address in every subnet.
-
-Example
-
-```
-10.0.1.0/24
-
-Reserved
-
-10.0.1.0
-10.0.1.1
-10.0.1.2
-10.0.1.3
-10.0.1.255
-```
-
-Usable IPs
-
-```
-251
-```
-
----
-
 # VPC Architecture
 
 ```
@@ -675,48 +573,6 @@ Usable IPs
         │   10.0.2.0/24                  │
         └────────────────────────────────┘
 ```
-
----
-
-# Public Subnet
-
-A Public Subnet is a subnet that has a route to the Internet Gateway.
-
-Resources generally placed here:
-
-- Bastion Host
-- Public EC2
-- Application Load Balancer
-- NAT Gateway
-
-Example
-
-```
-Public Subnet
-
-10.0.1.0/24
-```
-
----
-
-# Private Subnet
-
-A Private Subnet does NOT have a direct route to the Internet Gateway.
-
-Resources generally placed here:
-
-- Application Server
-- Database Server
-- Internal Services
-
-Example
-
-```
-Private Subnet
-
-10.0.2.0/24
-```
-
 ---
 
 # Lab Goal
@@ -1056,6 +912,9 @@ Subnets
 
 ❌ Using Default VPC for Production.
 
+
+
+---
 ---
 
 # Hands-on Lab - Internet Gateway & Route Table
