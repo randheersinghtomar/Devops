@@ -559,6 +559,237 @@ Think of it like this:
 | **Security Group** | Security guard/firewall |
 | **NAT Gateway** | Allows private resources to access the internet without being directly reachable |
 
+---
+---
+
+
+
+# 2.Subnets
+
+## 1. What is a Subnet?
+
+A **subnet (subnetwork)** is a smaller network created inside a **VPC**.
+
+It divides the VPC IP range into smaller networks where we place resources like **EC2 instances, Load Balancers, RDS**, etc.
+
+### Example
+
+```text
+VPC: 10.0.0.0/16
+        |
+        +--- Public Subnet:  10.0.1.0/24
+        |
+        +--- Private Subnet: 10.0.2.0/24
+````
+
+* **VPC** → Overall network
+* **Subnet** → Smaller network inside the VPC
+* A subnet belongs to **one Availability Zone**
+
+---
+
+## 2. Public vs Private Subnet
+
+The main difference is the **route to the Internet Gateway (IGW)**.
+
+### Public Subnet
+
+A subnet is considered **public** when its route table has a route to an **Internet Gateway**.
+
+```text
+Internet
+   |
+  IGW
+   |
+Public Subnet
+   |
+  EC2
+```
+
+Example route table:
+
+```text
+Destination       Target
+10.0.0.0/16       local
+0.0.0.0/0         Internet Gateway
+```
+
+Usually used for:
+
+* Internet-facing Load Balancer
+* Bastion Host
+* Public EC2
+
+> An EC2 also needs a public IPv4 address/EIP and appropriate security rules to communicate directly with the internet.
+
+### Private Subnet
+
+A private subnet does **not** have a direct route to the Internet Gateway.
+
+For outbound internet access, it commonly uses a **NAT Gateway** in a public subnet.
+
+```text
+Private EC2
+    |
+Private Route Table
+    |
+ NAT Gateway
+    |
+   IGW
+    |
+ Internet
+```
+
+Usually used for:
+
+* Application servers
+* Database servers
+* Internal services
+
+---
+
+## 3. Subnet CIDR
+
+**CIDR** defines the IP address range of the subnet.
+
+Example:
+
+```text
+VPC:            10.0.0.0/16
+
+Public Subnet:  10.0.1.0/24
+Private Subnet: 10.0.2.0/24
+```
+
+For a `/24` subnet:
+
+```text
+10.0.1.0 → 10.0.1.255
+```
+
+Total IP addresses:
+
+```text
+2^(32-24) = 256
+```
+
+AWS reserves **5 IP addresses**, so:
+
+```text
+256 - 5 = 251 usable IPv4 addresses
+```
+
+---
+
+## 4. Availability Zone
+
+An **Availability Zone (AZ)** is an isolated location within an AWS Region.
+
+Example:
+
+```text
+Region: ap-south-1
+        |
+        +--- AZ: ap-south-1a
+        |       |
+        |       +--- Public Subnet
+        |
+        +--- AZ: ap-south-1b
+                |
+                +--- Private Subnet
+```
+
+### Important Point
+
+A subnet exists in **only one AZ**.
+
+For high availability, we normally create subnets across multiple AZs:
+
+```text
+VPC
+ |
+ +--- AZ-a
+ |     +--- Public Subnet
+ |     +--- Private Subnet
+ |
+ +--- AZ-b
+       +--- Public Subnet
+       +--- Private Subnet
+```
+
+---
+
+## 5. Subnet Route Table Association
+
+A **route table controls where traffic from a subnet should go**.
+
+Each subnet is associated with a route table.
+
+### Public Subnet
+
+```text
+Public Subnet
+      |
+      v
+Public Route Table
+      |
+      +--- 10.0.0.0/16 → local
+      +--- 0.0.0.0/0   → IGW
+```
+
+### Private Subnet
+
+```text
+Private Subnet
+      |
+      v
+Private Route Table
+      |
+      +--- 10.0.0.0/16 → local
+      +--- 0.0.0.0/0   → NAT Gateway
+```
+
+### Interview Point
+
+> **Public/private status is determined by the subnet's route table, not simply by its name.**
+
+---
+
+## 6. Reserved IP Addresses
+
+AWS reserves **5 IPv4 addresses** in every subnet.
+
+For:
+
+```text
+10.0.1.0/24
+```
+
+AWS reserves:
+
+| IP Address   | Purpose                   |
+| ------------ | ------------------------- |
+| `10.0.1.0`   | Network address           |
+| `10.0.1.1`   | VPC router                |
+| `10.0.1.2`   | DNS server                |
+| `10.0.1.3`   | Future use                |
+| `10.0.1.255` | Network broadcast address |
+
+Therefore:
+
+```text
+256 total IPs
+- 5 reserved
+= 251 usable IPs
+```
+
+---
+
+## Interview Summary
+
+> **A subnet is a smaller IP range inside a VPC. A public subnet has a route to an Internet Gateway, while a private subnet does not have direct internet access. Each subnet belongs to one Availability Zone and is associated with a route table. AWS reserves five IPv4 addresses in every subnet.**
+
+
 
 ---
 
