@@ -1121,8 +1121,325 @@ Subnets
 
 ❌ Using Default VPC for Production.
 
+---
+---
 
 
+# 3. Routing & Internet Access ⭐
+
+## 1. Route Table
+
+A **Route Table** contains rules that decide where network traffic should go.
+
+Think of it as a **traffic map** for your VPC.
+
+### Example
+
+```text
+Destination       Target
+10.0.0.0/16       local
+0.0.0.0/0         Internet Gateway
+````
+
+Meaning:
+
+* `10.0.0.0/16` → Send VPC traffic locally
+* `0.0.0.0/0` → Send all other traffic to the Internet Gateway
+
+A subnet is associated with a route table.
+
+---
+
+## 2. Local Route
+
+When a VPC is created, AWS automatically adds a **local route**.
+
+Example:
+
+```text
+Destination       Target
+10.0.0.0/16       local
+```
+
+This allows communication between resources within the VPC.
+
+### Example
+
+```text
+EC2-A
+10.0.1.10
+   |
+   | Local Route
+   |
+EC2-B
+10.0.2.10
+```
+
+Both instances can communicate because their traffic stays inside the VPC.
+
+> **Local route allows communication within the VPC CIDR.**
+
+The local route cannot be removed.
+
+---
+
+## 3. Internet Gateway (IGW)
+
+An **Internet Gateway (IGW)** allows communication between a VPC and the internet.
+
+```text
+Internet
+    |
+    |
+   IGW
+    |
+    |
+   VPC
+```
+
+### Requirements for Internet Access
+
+For an EC2 in a public subnet to access the internet:
+
+```text
+EC2
+ |
+Public Subnet
+ |
+Route Table
+ |
+IGW
+ |
+Internet
+```
+
+The route table needs:
+
+```text
+0.0.0.0/0 → Internet Gateway
+```
+
+The EC2 also needs a **public IPv4 address or Elastic IP**.
+
+Security Group and Network ACL rules must also allow the required traffic.
+
+---
+
+## 4. NAT Gateway
+
+**NAT Gateway (Network Address Translation Gateway)** allows resources in a **private subnet** to access the internet **outbound**.
+
+```text
+Private EC2
+     |
+Private Route Table
+     |
+NAT Gateway
+     |
+Public Subnet
+     |
+IGW
+     |
+Internet
+```
+
+Private subnet route table:
+
+```text
+Destination       Target
+10.0.0.0/16       local
+0.0.0.0/0         NAT Gateway
+```
+
+### Important
+
+NAT Gateway allows:
+
+* Private → Internet ✅
+* Internet → Private EC2 ❌
+
+So a private EC2 can download updates or access external APIs, but the internet cannot directly initiate a connection to that EC2 through the NAT Gateway.
+
+> A NAT Gateway is normally created in a **public subnet**.
+
+---
+
+## 5. Elastic IP
+
+An **Elastic IP (EIP)** is a static public IPv4 address provided by AWS.
+
+It can be associated with resources such as:
+
+* EC2
+* NAT Gateway
+
+### Normal Public IP
+
+A public IPv4 address can change when an EC2 instance is stopped and started.
+
+### Elastic IP
+
+An EIP is static and remains associated with the resource until you release/disassociate it.
+
+```text
+Internet
+   |
+Elastic IP
+   |
+  EC2
+```
+
+### Interview Point
+
+> Use an Elastic IP when you need a persistent public IPv4 address.
+
+---
+
+## 6. Public vs Private Routing
+
+### Public Routing
+
+```text
+Internet
+   |
+  IGW
+   |
+Public Route Table
+   |
+Public Subnet
+   |
+  EC2
+```
+
+Route:
+
+```text
+0.0.0.0/0 → IGW
+```
+
+### Private Routing
+
+```text
+Private EC2
+     |
+Private Route Table
+     |
+NAT Gateway
+     |
+IGW
+     |
+Internet
+```
+
+Route:
+
+```text
+0.0.0.0/0 → NAT Gateway
+```
+
+---
+
+## 7. Internet Access from Public Subnet
+
+An EC2 in a public subnet can communicate with the internet when the required configuration is present.
+
+```text
+                    INTERNET
+                        |
+                       IGW
+                        |
+                Public Route Table
+                        |
+                 Public Subnet
+                        |
+                       EC2
+```
+
+Route table:
+
+```text
+Destination       Target
+10.0.0.0/16       local
+0.0.0.0/0         IGW
+```
+
+EC2 requires:
+
+* Public IPv4 / Elastic IP
+* Route to IGW
+* Appropriate Security Group rules
+* Appropriate Network ACL rules
+
+---
+
+## 8. Internet Access from Private Subnet
+
+A private EC2 does not directly connect to the Internet Gateway.
+
+For outbound internet access, it uses a NAT Gateway.
+
+```text
+                    INTERNET
+                        |
+                       IGW
+                        |
+                 NAT Gateway
+                        |
+                Public Subnet
+                        |
+                 Private Route Table
+                        |
+                Private Subnet
+                        |
+                    Private EC2
+```
+
+Private route table:
+
+```text
+Destination       Target
+10.0.0.0/16       local
+0.0.0.0/0         NAT Gateway
+```
+
+### Example
+
+A private EC2 needs to download a package:
+
+```text
+Private EC2
+     |
+     v
+NAT Gateway
+     |
+     v
+Internet Gateway
+     |
+     v
+Internet
+```
+
+The response comes back through the NAT Gateway to the private EC2.
+
+---
+
+## Quick Comparison
+
+| Feature                                  | Public Subnet          | Private Subnet  |
+| ---------------------------------------- | ---------------------- | --------------- |
+| Route to IGW                             | Yes                    | No direct route |
+| Direct internet access                   | Yes*                   | No              |
+| NAT Gateway needed for outbound internet | No                     | Yes             |
+| Common use                               | Load Balancer, Bastion | App servers, DB |
+| Public IP commonly used                  | Yes                    | No              |
+
+*The resource also needs the appropriate public addressing and security configuration.
+
+---
+
+## Interview Summary
+
+> **A route table controls where traffic from a subnet goes. The local route allows communication within the VPC. An Internet Gateway provides internet connectivity for resources in public subnets. A NAT Gateway allows resources in private subnets to initiate outbound internet connections without exposing them directly to the internet. An Elastic IP provides a static public IPv4 address.**
 
 ---
 ---
