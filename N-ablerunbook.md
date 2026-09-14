@@ -11,6 +11,8 @@
 # Step-by-step Guide - File Upload
 
 # Ncod
+
+# Add to 
 ---
 ---
 
@@ -812,6 +814,64 @@ Hi N-able Dev Ops we are getting this alert again and again, so going to restart
 `sh simplelogsnap.sh`
 
 `nko.pl -status`
+```
+---
+---
+
+
+
+# Add Disk to ZFS Pool
+
+Please follow the new process to add the disk to the ZFS pool updated on Jun 8, 2026.
+
+## Before Running the `add_disk_to_pool.py` Script
+
+### 1. Make the Node Offline
+
+Run the following command:
+
+```bash
+/storage/ManagementCloud/scripts/update_storage_node.sh Offline
+````
+
+### 2. Reduce Load for Resilvering
+
+Run the following command:
+
+(This is necessary to reduce the load on the system.)
+
+```bash
+sudo /scripts/reduce_load_for_resilver.sh reduce
+```
+
+## Add the Disk to the Pool
+
+Run the following steps:
+
+```bash
+cd /scripts/
+ls -l
+screen -mS add_disk_zfs
+sudo /scripts/add_disk_to_pool.py
+```
+
+## After the Resilvering Process Is Complete
+
+Restore the load by running:
+
+```bash
+sudo /scripts/reduce_load_for_resilver.sh restore
+```
+
+## Make the Node Online
+
+Run the following command:
+
+```bash
+/storage/ManagementCloud/scripts/update_storage_node.sh Online
+```
+
+```
 ```
 
 
