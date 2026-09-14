@@ -12,7 +12,7 @@
 
 # Ncod
 
-# Add to 
+#  Add the disk to the zfs pool
 ---
 ---
 
