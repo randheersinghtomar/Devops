@@ -10,6 +10,7 @@
 
 # Step-by-step Guide - File Upload
 
+# Ncod
 ---
 ---
 
@@ -682,5 +683,140 @@ Wed Apr 25 00:50:20 CEST 2018
    Ensure to register a Jira ticket [via this link](https://n-able.atlassian.net/wiki/spaces/DO/pages/4508951397), update "Due date" field to set 1-day interval to address the issue, assign the ticket to an [on-call engineer](https://n-able.atlassian.net/browse/BR-11117) (who is assigned to [this ticket](https://n-able.atlassian.net/browse/BR-11117)) and inform him/her directly to draw attention to the issue.
 
    The link to OpsGenie Alerts page: [https://app.opsgenie.com/alert/V2#/alert-genie](https://app.opsgenie.com/alert/V2#/alert-genie)
+
+---
+
+
+1) ncod645.n-able.com - Log Analysis (Batch) is Failed
+
+find in runbook MSPA runbook --> mentioned here that this alert usually comes when there is some activity.
+we can ask on N-Central Alerts (Flexis) if there is any activity going on. 
+
+2) [Pingdom] ncod621.n-able.com Current State: DOWN  (N-central)
+   [Pingdom] nasstar1.n-able.com Current State: DOWN
+
+immediate action (even if p3, consider it as p1) 
+Note:- Use n-able.com (dundee) vpn
+
+put hostname (eg:-nasstar1.n-able.com) on browser and search
+
+1. if login page comes then take screenshot and put on teams channel. Alert may heal after some time
+2. if no login page then work as per runbook.
+
+first login to N-activate server --> search by host name --> find the related nce --> copy ssh password
+
+go to putty --> login default settings --> type admin@(host name) --> type sudo su - --> paste password
+
+run commands as per runbook
+
+first step-command to check all services status --> `nko.pl -status`
+
+(this command tells whether nko logs running or not)
+
+(nko logs automatically restart all services which heals the issue)
+
+(if nko logs running then wait, alert may auto heal)
+
+(If nko logs not running then check the status by running below command)
+
+=====>> logsnap running kese check krenge? other than nko.pl -status
+
+Snap log folder:--- `/var/tmp/logSnap/`
+
+`ls -ll` --(es mai date check kr lena current day ki h ya..... current day ki nhi h to run below command to take snap log)
+
+==>> For Can you please take simplelogsnap / taking snapShot:--
+
+`sh simplelogsnap.sh`
+
+/
+
+`sh logSnap.sh`
+
+==>> What is the disk free space like?
+
+`df -h`
+
+==>> if asked whether backup running?
+
+`/var/log/n-central/ncbackup.log`
+
+==>> check for logsnap please, was jetty previously restarted?
+
+`systemctl status jetty`
+
+`cd /var/tmp/logsnap`
+
+`ll`
+
+`date`
+
+==>> Check all services:
+
+`/opt/nable/sbin/nko.pl -status`
+
+==>> Check All logs:
+
+`tail -f /var/log/n-central/nko.log`
+
+`grep ERROR /var/log/n-central/nko.log`
+
+`tail -f /var/log/n-central/nko.log`
+
+==>> check load avg
+
+`cat /proc/loadavg`
+
+**If alert is coming repeatedly and oncall not responding then run the Logsnap (using command sh logSnap.sh) before that check `#ls -l /var/tmp/logsnap` and then restart the NOS.**
+
+sample jira:- https://n-able.atlassian.net/browse/ND-12908
+
+restart affected service (nos/jetty whatever) then check with this command (`nko.pl -status`) again whether everything is ok.
+
+Note:- if ncod alert is comming and auto healing again and again then restart the nos service and update on the group.
+
+concerned groups n-able dev ops --> N central alerts(flexis) {monitor this group continuously}
+
+sample jira:- https://n-able.atlassian.net/browse/ND-12504
+
+Logging a case with LanDynamix:-
+
+Example:-
+
+MSPC-GW-LAN-ZAF-JNB3
+
+Ticket #531832
+
+`/opt/nable/sbin/nko.pl -status`
+
+`sh logsnap.sh`
+
+`tail -f /var/log/n-central/nko.log`
+
+`tail -f /var/log/n-central/nko.log grep ERROR /var/log/n-central/nko.log`
+
+Hi N-able Dev Ops we are getting this alert again and again, so going to restart NOS
+
+4th - `systemctl stop nos`
+
+5th - `systemctl start nos`
+
+6th - `systemctl status jetty`
+
+`cat /proc/loadavg`
+
+`top`
+
+`grep -i logsnap /var/log/n-central/nko.log`
+
+`sh simplelogsnap.sh`
+
+`nko.pl -status`
+```
+
+
+
+```bash
+nko.pl -status
 
 
