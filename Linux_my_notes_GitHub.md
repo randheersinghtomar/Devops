@@ -1747,4 +1747,82 @@ It removes most of the limitations of MBR:
 
 ## 8.2) Partitioning
 
+---
+---
+---
+
+
+# Linux User Management — 4-Year Admin
+
+## 1. User Creation
+
+- `useradd` / `adduser`
+- UID, home directory, shell, comment
+- System/service users
+- `/etc/skel`
+
+## 2. User Information & Configuration
+
+- `id`, `whoami`, `who`, `w`, `last`
+- `/etc/passwd`
+- `/etc/shadow`
+- `/etc/login.defs`
+- `/etc/default/useradd`
+
+## 3. Password Management & Policy
+
+- `passwd`
+- Password aging & expiry
+- `chage`
+- Force password change
+- Password complexity/history
+- PAM & `pam_pwquality`
+
+## 4. User Modification
+
+- `usermod`
+- Change UID / username
+- Change or move home directory
+- Change login shell
+- Modify user information
+
+## 5. Lock, Unlock & Expiration
+
+- Lock / unlock user
+- Password vs account expiration
+- `passwd -l` / `passwd -u`
+- `usermod -L` / `usermod -U`
+- Account expiration
+
+## 6. User Deletion
+
+- `userdel`
+- `userdel -r`
+- Files owned by deleted users
+- Safe production deletion
+
+## 7. Login & Home Directory
+
+- Login shells
+- `/bin/bash`, `/sbin/nologin`, `/bin/false`
+- Home directory management
+- SSH login troubleshooting
+
+## 8. UID & Service Accounts
+
+- UID `0`
+- Normal vs system users
+- UID conflicts
+- Service accounts
+
+## 9. Troubleshooting & Interview
+
+- User cannot login
+- Password expired/locked
+- SSH login failure
+- Wrong shell/home directory
+- UID/account issues
+- Production scenarios
+- **4-year interview questions**
+
 
