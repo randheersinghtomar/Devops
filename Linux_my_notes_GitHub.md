@@ -35,14 +35,16 @@
 
 # Module 5: User Administration
 
-- Users & Groups
-- `/etc/passwd` & `/etc/shadow`
-- Password Management
-- Permissions
-- `chmod`, `chown`, `chgrp`
-- ACL
-- SUID, SGID, Sticky Bit
-- Hard & Soft Links
+- 1. User Creation
+- 2. User Information & Configuration
+- 3. Password Management & Policy
+- 4. User Modification
+- 5. Lock, Unlock & Expiration
+- 6. User Deletion
+- 7. Login & Home Directory
+- 8. UID & Service Accounts
+- 9. Troubleshooting & Interview
+
 
 # Module 6: Process & Package Management
 
@@ -1752,7 +1754,7 @@ It removes most of the limitations of MBR:
 ---
 
 
-# Linux User Management — 4-Year Admin
+# Module 5: User Administration
 
 ## 1. User Creation
 
