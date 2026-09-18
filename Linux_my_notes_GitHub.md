@@ -19,7 +19,10 @@
 - File Types & Inodes
 - Filesystem Concepts
 - Mount Points & Mounting
-- Hard & Soft Links
+- Link Files
+  1. Hard Link
+  2. Soft Link (Symbolic Link)
+  3. Dangling / Broken Link
 
 # Module 4: Linux Commands
 
