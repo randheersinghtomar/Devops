@@ -658,7 +658,112 @@ Depending on the issue, L2 may escalate to:
 ---
 
 
+<h1 align="center">2. Bad Requests / HTTPS Connection Failure</h1>
 
 
+## 1. What is this alert?
 
+Zabbix reports HTTP 5xx errors on the server, especially **502 Bad Gateway**.
+
+Our task is to check Nginx logs, identify the issue, perform the approved fix, and verify whether the alert clears.
+
+## 2. Troubleshooting Steps
+
+### Step 1: Login to the Server
+
+Connect to the affected server using SSH.
+
+### Step 2: Check Nginx Logs
+
+```
+tail -n 100000 /storage/ManagementCloud/var/log/nginx/nginx-access.log | grep 'HTTP/1.1" 50'
+```
+
+**Purpose:** Find HTTP 5xx errors such as 500, 502, and 503.
+
+* If no 5xx errors are found → escalate to MSP Backup DevOps via OpsGenie.
+
+* If errors are found → check for `POST /defragment` requests returning 502.
+
+### Step 3: Stop ReportingService
+
+If the logs match the issue described in the runbook:
+
+```
+pgrep ReportingService | xargs sudo kill -9
+```
+
+**Purpose:** Forcefully stop the suspected problematic process.
+
+### Step 4: Restart Nginx
+
+```
+sudo kill $(cat /storage/ManagementCloud/var/run/nginx.pid)
+```
+
+**Purpose:** Stop Nginx so it can restart and reset its SLA counters.
+
+Wait 30 seconds:
+
+```
+sleep 30
+```
+
+Check whether Nginx is running:
+
+```
+ps auxwww | grep 'nginx: master'
+```
+
+### Step 5: Verify the Alert
+
+Wait up to 5 minutes.
+
+* **Alert closed:** Confirm recovery and update Jira.
+
+* **Alert still active:** Continue troubleshooting and escalate.
+
+### Step 6: If the Issue Persists
+
+If Nginx cannot be stopped or shows `STOP` / `vodead` status:
+
+1. Confirm iDRAC Virtual Console access.
+
+2. Reboot the server if authorized.
+
+3. If the issue continues, escalate to MSP Backup DevOps.
+
+### Step 7: Check Repeated Alerts
+
+Check OpsGenie history for the last 7 days.
+
+* More than 3 related alerts → escalate to MSP Backup DevOps.
+
+* Create or update the Jira ticket.
+
+* Assign it to the on-call engineer.
+
+* Set the required due date and notify the engineer.
+
+## 3. Commands to Remember
+
+| Command                  | Purpose                     |                      |
+| ------------------------ | --------------------------- | -------------------- |
+| `tail ...                | grep ...`                   | Find HTTP 5xx errors |
+| `pgrep ReportingService` | Find the process            |                      |
+| `kill -9`                | Forcefully stop the process |                      |
+| `cat nginx.pid`          | Read Nginx process ID       |                      |
+| `sleep 30`               | Wait 30 seconds             |                      |
+| `ps auxwww`              | Check running processes     |                      |
+| `reboot`                 | Restart the server          |                      |
+
+> **Note:** `kill -9` and reboot are impactful actions. Follow the production runbook and authorization process.
+
+## 4. Interview Answer
+
+“When I receive a Bad Requests alert, I log in to the affected server and check the Nginx access logs for HTTP 5xx errors, especially 502 responses. If I find failed `/defragment` requests, I follow the runbook to stop the suspected ReportingService process and restart Nginx. I then verify that Nginx is running and check whether the alert clears within five minutes. If the issue persists, I check iDRAC access, follow the approved recovery procedure, escalate through OpsGenie, and update the Jira ticket.”
+
+
+---
+---
 
