@@ -1670,3 +1670,94 @@ After resolving the issue, I run `df -h` again, verify the service and monitorin
 
 ---
 ---
+
+<h1 align="center">7. Disk Replacement — Add Disk to ZFS Pool</h1>
+
+
+## 1. Make the Node Offline
+
+Take the storage node offline:
+
+```bash
+/storage/ManagementCloud/scripts/update_storage_node.sh Offline
+```
+
+---
+
+## 2. Reduce Load for Resilvering
+
+Reduce system load before adding the disk:
+
+```bash
+sudo /scripts/reduce_load_for_resilver.sh reduce
+```
+
+**Purpose:** Reduces system load so the ZFS resilvering process can run smoothly.
+
+---
+
+## 3. Add the New Disk to ZFS Pool
+
+Go to the scripts directory:
+
+```bash
+cd /scripts/
+ls -l
+```
+
+Start a screen session:
+
+```bash
+screen -mS add_disk_zfs
+```
+
+Run the disk-add script:
+
+```bash
+sudo /scripts/add_disk_to_pool.py
+```
+
+**Purpose:** Adds the replacement disk to the ZFS pool and starts the resilvering process.
+
+---
+
+## 4. Wait for Resilvering to Complete
+
+Monitor the ZFS pool and wait until resilvering is completed.
+
+**Do not restore load or bring the node online until resilvering is complete.**
+
+---
+
+## 5. Restore System Load
+
+After resilvering completes:
+
+```bash
+sudo /scripts/reduce_load_for_resilver.sh restore
+```
+
+---
+
+## 6. Make the Node Online
+
+Bring the storage node back online:
+
+```bash
+/storage/ManagementCloud/scripts/update_storage_node.sh Online
+```
+
+---
+
+## Commands to Remember
+
+| Step         | Command                               |
+| ------------ | ------------------------------------- |
+| Offline      | `update_storage_node.sh Offline`      |
+| Reduce load  | `reduce_load_for_resilver.sh reduce`  |
+| Add disk     | `add_disk_to_pool.py`                 |
+| Restore load | `reduce_load_for_resilver.sh restore` |
+| Online       | `update_storage_node.sh Online`       |
+
+---
+---
