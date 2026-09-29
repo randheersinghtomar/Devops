@@ -886,3 +886,177 @@ Create/update the Jira ticket, set the required 1-day due date, assign it to the
 
 ---
 ---
+
+<h1 align="center">4. Open Port(s) Detected </h1>
+
+
+## 1. What is this alert?
+
+This alert means the monitoring system has detected one or more **TCP ports open** on a server or iDRAC IP.
+
+Example:
+
+```text
+Open ports: 22/tcp 5900/tcp
+```
+
+* `22` → SSH
+* `5900` → VNC
+* The alert means these ports are reachable from the scanner's network.
+
+The main task is to **identify the server/IP, determine who owns it, and make sure the open port is expected**.
+
+---
+
+## 2. Troubleshooting Steps
+
+### Step 1: Check the IP from the Alert
+
+Look at the IP address mentioned in the OpsGenie alert.
+
+Example:
+
+```text
+IP: 115.70.197.109
+Open ports: 22/tcp 5900/tcp
+```
+
+---
+
+### Step 2: Identify the Server
+
+If the alert is:
+
+```text
+Open port(s) detected NotpersistinRacktabels
+```
+
+Search the IP address in **RackTables**.
+
+**Purpose:** Find which server or equipment is using that IP.
+
+---
+
+### Step 3: Identify the Responsible Team
+
+Once the server is identified, check its hostname/type and escalate to the appropriate team.
+
+| Server Type       | Responsible Team                   |
+| ----------------- | ---------------------------------- |
+| Mail Assure       | Mail Assure team                   |
+| MSP Connect       | MSP Connect team                   |
+| Backup server     | Backup DevOps team                 |
+| Network equipment | Network team / designated engineer |
+
+**Important:** Do not assume the team from the IP alone. First identify the server in RackTables.
+
+---
+
+### Step 4: Create / Update Jira
+
+Create or update the Jira ticket with:
+
+* Affected IP
+* Open ports
+* Server hostname
+* OpsGenie alert details
+* Responsible team
+* Actions taken
+
+---
+
+## 3. If the Alert is for iDRAC
+
+If the alert is:
+
+```text
+Open port(s) detected Backup
+```
+
+First check whether the reported IP belongs to the server's **iDRAC**.
+
+If it is an iDRAC IP:
+
+1. Login to the iDRAC console.
+2. Go to **iDRAC Settings**.
+3. Select **Connectivity**.
+4. Open **Advanced Network Settings**.
+5. Check the configured IP ranges.
+6. Apply the approved firewall/IP-range configuration.
+
+### Important Concept
+
+The iDRAC firewall controls **which source IP ranges are allowed to access iDRAC**.
+
+Example:
+
+```text
+IP Range Address: 208.70.88.8
+Subnet Mask:      255.255.255.255
+```
+
+`255.255.255.255` means **only that specific IP address** is allowed.
+
+---
+
+## 4. Simple Troubleshooting Flow
+
+```text
+Open Port Alert
+       |
+       ↓
+Check IP and Open Port
+       |
+       ↓
+Identify Server in RackTables
+       |
+       ↓
+Identify Responsible Team
+       |
+       ↓
+Is it iDRAC?
+    /       \
+  Yes       No
+   |         |
+   ↓         ↓
+Check      Escalate to
+iDRAC      correct team
+Firewall
+   |
+   ↓
+Apply approved
+IP restrictions
+   |
+   ↓
+Verify Alert
+```
+
+---
+
+## 5. Commands to Remember
+
+For this alert, there are usually **no primary Linux commands** in the provided runbook.
+
+The important tools are:
+
+| Tool           | Purpose                               |
+| -------------- | ------------------------------------- |
+| **OpsGenie**   | Receive and manage the alert          |
+| **RackTables** | Identify the server using the IP      |
+| **iDRAC**      | Manage server hardware/network access |
+| **Jira**       | Track the incident and escalation     |
+
+---
+
+## 6. Interview Answer
+
+“When I receive an Open Port alert, I first check the IP address and the ports reported by the monitoring system. I identify the server using RackTables and determine which team is responsible for that server. If the IP belongs to iDRAC, I check the iDRAC firewall and its allowed IP ranges and apply the approved configuration if required. I then update Jira, escalate to the responsible team, and verify that the alert is resolved.”
+
+## 7. Easy Way to Remember
+
+**Open Port Alert =**
+
+**IP → Server → Team → iDRAC/Server → Firewall → Escalate → Verify**
+
+---
+---
