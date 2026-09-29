@@ -1442,3 +1442,231 @@ For repeated alerts, I take a LogSnap, update the Jira ticket, inform the N-able
 
 ---
 ---
+
+<h1 align="center">6.  Disk Full / Disk Space Alert</h1>
+
+
+## 1. What does the alert mean?
+
+It means a filesystem is running low on disk space.
+
+Example:
+
+```text
+Disk Space Usage High
+/var is 95% full
+No Space Left on Device
+```
+
+---
+
+## 2. Check Disk Space
+
+```bash
+df -h
+```
+
+Check:
+
+* `Use%` → how much space is used
+* `Avail` → available space
+* `Mounted on` → affected filesystem
+
+Example:
+
+```text
+/dev/xvda1   20G   19G   1G   95%   /
+```
+
+Here `/` is 95% full.
+
+---
+
+## 3. Check Inodes
+
+Sometimes the problem is not disk capacity but **inode exhaustion**.
+
+```bash
+df -ih
+```
+
+If `IUse%` is very high → inode issue.
+
+---
+
+## 4. Find What Is Using the Space
+
+If `/var` is full:
+
+```bash
+du -sh /var/*
+```
+
+For better sorting:
+
+```bash
+du -xhd1 /var | sort -h
+```
+
+For root:
+
+```bash
+du -xhd1 / | sort -h
+```
+
+Find large files:
+
+```bash
+du -ah /var/log | sort -h | tail -20
+```
+
+---
+
+## 5. Common Causes
+
+Usually check for:
+
+* Large log files
+* Old backup files
+* Temporary files
+* Application-generated files
+* Core dumps
+
+Check logs:
+
+```bash
+du -sh /var/log/*
+```
+
+---
+
+## 6. Clean Up Safely
+
+If old logs/temp files are confirmed as the cause:
+
+```bash
+rm -f <approved-file>
+```
+
+**Never randomly delete production files.**
+
+Use the approved cleanup/log-rotation procedure.
+
+---
+
+## 7. Important: Deleted File Still Using Space
+
+Sometimes a file is deleted but a running process still has it open.
+
+Check:
+
+```bash
+lsof +L1
+```
+
+If you see:
+
+```text
+<service> ... <file> (deleted)
+```
+
+The process is still holding the space.
+
+Follow the approved procedure to restart/reload the affected service:
+
+```bash
+systemctl restart <service>
+```
+
+Then:
+
+```bash
+df -h
+```
+
+---
+
+## 8. If Disk Cannot Be Cleaned
+
+Check storage/LVM:
+
+```bash
+lsblk
+vgs
+lvs
+```
+
+If additional disk/LVM expansion is required, follow the approved storage procedure and involve the Storage/Cloud team.
+
+---
+
+## 9. Verify After Fix
+
+Run:
+
+```bash
+df -h
+```
+
+Check that disk usage has reduced.
+
+Then verify the affected service:
+
+```bash
+systemctl status <service>
+```
+
+Finally, check whether the monitoring alert has cleared.
+
+---
+
+## 10. Escalate When
+
+Escalate if:
+
+* Disk keeps filling.
+* You cannot identify the cause.
+* Files cannot be safely removed.
+* Application is continuously generating large logs.
+* Storage/LVM expansion is required.
+* `df` is high but `du` does not explain the usage.
+* A deleted file is still held by a process and service intervention is required.
+
+Update Jira with:
+
+* Hostname
+* Filesystem
+* Disk usage
+* Root cause
+* Action taken
+* Current status
+
+---
+
+# Useful Commands
+
+| Command                                  | Purpose                              |
+| ---------------------------------------- | ------------------------------------ |
+| `df -h`                                  | Check disk space                     |
+| `df -ih`                                 | Check inode usage                    |
+| `du -sh /var/*`                          | Check directory sizes                |
+| `du -xhd1 /var \| sort -h`               | Find large directories               |
+| `du -ah /var/log \| sort -h \| tail -20` | Find large files                     |
+| `du -sh /var/log/*`                      | Check log sizes                      |
+| `lsof +L1`                               | Find deleted files still using space |
+| `lsblk`                                  | Check disks                          |
+| `vgs`                                    | Check volume groups                  |
+| `lvs`                                    | Check logical volumes                |
+
+---
+
+# Interview Answer
+
+“When I receive a disk space alert, I first run `df -h` to identify the affected filesystem. Then I use `du` to find which directory and files are consuming the space. I check logs, backup files and temporary files, and clean only approved files.
+
+I also check `df -ih` for inode issues. If `df` still shows high usage after cleanup, I use `lsof +L1` to check for deleted files still held open by processes.
+
+After resolving the issue, I run `df -h` again, verify the service and monitoring alert, and escalate to the Storage or Application team if further action is required.”
+
+---
+---
