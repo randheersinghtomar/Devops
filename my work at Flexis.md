@@ -1060,3 +1060,385 @@ The important tools are:
 
 ---
 ---
+
+<h1 align="center">5. NCOD / N-Central Log Analysis Alert </h1>
+
+## 1. What is this alert?
+
+Example:
+
+```text
+ncod645.n-able.com - Log Analysis (Batch) is Failed
+```
+
+This alert is related to the **N-Central server and its services/log processing**.
+
+Sometimes the alert appears because some activity is happening on the N-Central server and may **auto-heal**.
+
+The first priority is to check whether the server is accessible and whether the N-Central services are running.
+
+---
+
+## 2. Immediate Check
+
+If you also receive:
+
+```text
+[Pingdom] ncod621.n-able.com Current State: DOWN
+[Pingdom] nasstar1.n-able.com Current State: DOWN
+```
+
+Treat the issue as high priority and investigate immediately.
+
+Use the **n-able.com (Dundee) VPN** before accessing the environment.
+
+### Check the hostname in a browser
+
+Example:
+
+```text
+https://nasstar1.n-able.com
+```
+
+### If the login page appears
+
+Take a screenshot and post it in the appropriate Teams channel.
+
+The alert may recover automatically after some time.
+
+### If the login page does NOT appear
+
+Continue with the N-Central troubleshooting steps below.
+
+---
+
+# 3. Login to the N-Central Server
+
+### Step 1: Find the server in N-activate
+
+1. Login to the **N-activate** server.
+2. Search for the affected hostname.
+3. Find the related NCE.
+4. Copy the SSH password.
+
+### Step 2: Login using PuTTY
+
+Use:
+
+```text
+admin@<hostname>
+```
+
+Then switch to root:
+
+```bash
+sudo su -
+```
+
+---
+
+# 4. First Check — N-Central Services
+
+Run:
+
+```bash
+/opt/nable/sbin/nko.pl -status
+```
+
+or:
+
+```bash
+nko.pl -status
+```
+
+### What does this command do?
+
+It checks the status of the N-Central services/processes.
+
+### Easy decision
+
+```text
+nko.pl -status
+       |
+       ↓
+Are services running?
+   /          \
+ Yes           No
+  |             |
+  ↓             ↓
+Wait for      Investigate
+auto-healing  and restart
+```
+
+If everything is running, **wait and monitor**, because the alert may auto-heal.
+
+If the required service is not running, continue troubleshooting.
+
+---
+
+# 5. Check LogSnap
+
+LogSnap collects diagnostic logs that can be used for troubleshooting.
+
+Check the LogSnap directory:
+
+```bash
+ls -ll /var/tmp/logsnap
+```
+
+or:
+
+```bash
+ls -ll /var/tmp/logSnap/
+```
+
+Check the date/time of the existing files.
+
+If a current LogSnap is not available, create one.
+
+### Take a simple LogSnap
+
+```bash
+sh simplelogsnap.sh
+```
+
+or:
+
+```bash
+sh logSnap.sh
+```
+
+**Purpose:** Collect diagnostic logs for investigation/escalation.
+
+---
+
+# 6. Check Disk Space
+
+Run:
+
+```bash
+df -h
+```
+
+### Why?
+
+If the filesystem is full, services may fail to write logs or operate correctly.
+
+Look for filesystems with very high usage.
+
+---
+
+# 7. Check N-Central Logs
+
+Main N-Central log:
+
+```bash
+tail -f /var/log/n-central/nko.log
+```
+
+This displays new log entries as they are generated.
+
+To look specifically for errors:
+
+```bash
+grep ERROR /var/log/n-central/nko.log
+```
+
+You can also search for LogSnap-related messages:
+
+```bash
+grep -i logsnap /var/log/n-central/nko.log
+```
+
+### Easy meaning
+
+```text
+nko.log
+   |
+   ├── Normal messages
+   ├── ERROR messages
+   └── LogSnap-related messages
+```
+
+---
+
+# 8. Check Server Load
+
+Check load average:
+
+```bash
+cat /proc/loadavg
+```
+
+You can also use:
+
+```bash
+top
+```
+
+### Why?
+
+High CPU/load can cause services to become slow or unresponsive.
+
+For example:
+
+```text
+cat /proc/loadavg
+```
+
+shows the system load averages.
+
+`top` gives a live view of CPU, memory, processes, and load.
+
+---
+
+# 9. Check Jetty
+
+If the issue involves Jetty, check:
+
+```bash
+systemctl status jetty
+```
+
+### Why?
+
+Jetty is an important N-Central service. If it is stopped or unhealthy, it can contribute to application problems.
+
+---
+
+# 10. Check Whether Backup is Running
+
+If someone asks whether backup is running, check:
+
+```bash
+cat /var/log/n-central/ncbackup.log
+```
+
+This helps you check the N-Central backup activity/log.
+
+---
+
+# 11. If the Alert Keeps Coming Again and Again
+
+If the NCOD alert is repeatedly firing and auto-healing:
+
+1. Monitor the **N-Central Alerts (Flexis)** Teams group.
+2. Check `nko.pl -status`.
+3. Check `nko.log`.
+4. Take a LogSnap if required.
+5. Check CPU/load and disk space.
+6. Inform the concerned team before restarting services.
+7. Restart the affected service if the runbook requires it.
+8. Verify the service status again.
+
+---
+
+# 12. Restart NOS Service- If Alert Keeps Repeating
+
+* Check `nko.pl -status` and N-Central logs.
+* Check LogSnap, disk space, and load.
+* If required, restart NOS as per the runbook:
+
+```bash
+systemctl stop nos
+systemctl start nos
+systemctl status jetty
+nko.pl -status
+```
+
+* Monitor whether the alert clears.
+* Inform the concerned N-able DevOps team if it keeps recurring.
+
+---
+
+# 13. After Restart — Verify Everything
+
+Run:
+
+```bash
+nko.pl -status
+```
+
+Check Jetty:
+
+```bash
+systemctl status jetty
+```
+
+Check load:
+
+```bash
+cat /proc/loadavg
+```
+
+Check logs:
+
+```bash
+grep ERROR /var/log/n-central/nko.log
+```
+
+If required, take another LogSnap:
+
+```bash
+sh simplelogsnap.sh
+```
+
+Then monitor the alert to confirm that it has recovered.
+
+---
+
+# 14. Jira / Escalation
+
+* If the issue is not resolved, update/create a Jira ticket.
+
+* Include:
+
+  * Alert details
+  * Server/hostname
+  * Relevant errors/logs
+  * LogSnap status
+  * Actions performed
+  * Current status
+
+* Escalate to the concerned N-able DevOps team if required.
+---
+
+# 15. Useful Commands to Remember
+
+| Command                                      | Purpose                        |
+| -------------------------------------------- | ------------------------------ |
+| `nko.pl -status`                             | Check N-Central service status |
+| `ls -ll /var/tmp/logsnap`                    | Check existing LogSnap files   |
+| `sh simplelogsnap.sh`                        | Take a simple LogSnap          |
+| `sh logSnap.sh`                              | Take LogSnap                   |
+| `df -h`                                      | Check disk space               |
+| `tail -f /var/log/n-central/nko.log`         | Monitor N-Central logs         |
+| `grep ERROR /var/log/n-central/nko.log`      | Find errors                    |
+| `grep -i logsnap /var/log/n-central/nko.log` | Find LogSnap messages          |
+| `systemctl status jetty`                     | Check Jetty                    |
+| `cat /proc/loadavg`                          | Check system load              |
+| `top`                                        | Monitor CPU/memory/processes   |
+| `cat /var/log/n-central/ncbackup.log`        | Check backup activity          |
+| `systemctl stop nos`                         | Stop NOS                       |
+| `systemctl start nos`                        | Start NOS                      |
+
+---
+
+# 16. Interview Answer
+
+“When I receive an NCOD Log Analysis alert, I first check whether the N-Central server is accessible and whether the login page is available. If I can access the server, I log in and run `nko.pl -status` to check the N-Central services.
+
+If the services are running, I monitor the alert because it may auto-heal. If the issue continues, I check `nko.log`, disk space, system load, Jetty status, and LogSnap availability.
+
+If NOS is identified as the affected service and the runbook requires a restart, I stop and start the NOS service and then run `nko.pl -status` again to verify recovery.
+
+For repeated alerts, I take a LogSnap, update the Jira ticket, inform the N-able DevOps team, and continue monitoring until the alert is resolved.”
+
+---
+
+## Easy Way to Remember
+
+**NCOD Alert → Access → `nko.pl -status` → Logs → LogSnap → Disk/Load → Service → Restart → Verify → Escalate**
+
+---
+---
