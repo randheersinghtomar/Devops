@@ -767,3 +767,122 @@ Check OpsGenie history for the last 7 days.
 ---
 ---
 
+
+<h1 align="center">3. File Upload Alert </h1>
+
+
+## 1. What is this alert?
+
+The File Upload alert indicates that clients may be experiencing problems uploading backup data to the server.
+
+Our task is to check Nginx logs, verify the Nginx configuration, restart Nginx if required, and confirm whether the alert clears.
+
+## 2. Troubleshooting Steps
+
+### Step 1: Login to the Server
+
+Connect to the affected server using SSH.
+
+If access is denied, escalate to MSP Backup DevOps via OpsGenie and create/update the Jira ticket. Ask the team to check Flexis team permissions on the host.
+
+### Step 2: Check Nginx Logs
+
+```
+tail -n 100000 /storage/ManagementCloud/var/log/nginx/nginx-access.log | grep 'HTTP/1.1" 50'
+```
+
+**Purpose:** Find HTTP errors related to file uploads.
+
+Look for upload requests such as `PUT` with HTTP error codes like:
+
+* `400` — Bad Request
+
+* `408` — Request Timeout
+
+Check the server time to correlate errors with the alert:
+
+```
+date
+```
+
+### Step 3: Check Nginx Worker Configuration
+
+**Important:** The old instruction to increase `worker_processes` to 12 is obsolete. Do not manually change this value.
+
+The worker count is now calculated based on the number of CPUs.
+
+### Step 4: Test Nginx Configuration
+
+```
+sudo /storage/ManagementCloud/bin/nginx -c /storage/ManagementCloud/etc/nginx/nginx.conf -p /storage/ManagementCloud/etc/nginx/ -t
+```
+
+**Purpose:** Check whether the Nginx configuration has any syntax errors.
+
+Proceed only if the configuration test is successful.
+
+### Step 5: Restart Nginx
+
+Check the running Nginx processes:
+
+```
+pgrep nginx
+```
+
+The runbook's restart procedure is:
+
+```
+sudo pkill nginx
+```
+
+Then check again:
+
+```
+pgrep nginx
+```
+
+**Purpose:** Stop Nginx processes so they can be restarted.
+
+Verify that Nginx has started successfully. Follow your team's approved procedure if it does not restart.
+
+### Step 6: Verify the Alert
+
+Wait up to **30 minutes**.
+
+* **Alert closed:** Confirm recovery and update Jira.
+
+* **Alert still active:** Escalate to MSP Backup DevOps via OpsGenie.
+
+### Step 7: Check Repeated Alerts
+
+Search OpsGenie for File Upload alerts from the last 7 days.
+
+```
+teams: "MSP_Backup" AND message: *File_upload* and entity: <host>
+```
+
+Replace `<host>` with the affected server's entity.
+
+If there are more than 3 related alerts, escalate to MSP Backup DevOps.
+
+Create/update the Jira ticket, set the required 1-day due date, assign it to the on-call engineer, and notify them directly.
+
+## 3. Commands to Remember
+
+| Command            | Purpose                               |                                |
+| ------------------ | ------------------------------------- | ------------------------------ |
+| `tail ...          | grep ...`                             | Find HTTP errors in Nginx logs |
+| `date`             | Check server date and time            |                                |
+| `nginx ... -t`     | Test Nginx configuration              |                                |
+| `pgrep nginx`      | Check Nginx processes                 |                                |
+| `sudo pkill nginx` | Stop Nginx processes                  |                                |
+| `pgrep nginx`      | Verify whether Nginx processes return |                                |
+
+> **Production note:** `pkill nginx` stops matching Nginx processes; it does not itself guarantee that Nginx restarts. Follow the approved service recovery procedure and verify that the service is running before closing the incident.
+
+## 4. Interview Answer
+
+“When I receive a File Upload alert, I log in to the affected server and check the Nginx access logs for upload failures, such as HTTP 400 or 408 errors. I verify the Nginx configuration using the configuration test command. If the test passes, I follow the approved procedure to restart Nginx and verify that it is running. I then monitor the alert for up to 30 minutes. If it does not clear or the issue occurs repeatedly, I escalate it through OpsGenie and update the Jira ticket.”
+
+---
+---
