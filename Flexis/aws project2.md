@@ -997,3 +997,144 @@ Update Jira/OpsGenie with the root cause and resolution.
 ```
 
 ---
+---
+
+
+<h1 align="center"> 5. File Upload Failure</h1>
+
+
+**Services:** S3, EC2, IAM, Security Groups, CloudWatch
+
+## Sample Alert
+
+> **ALERT: File Upload Failed**
+>
+> Application: `prod-app`
+> EC2: `i-0abc123456789`
+> S3 Bucket: `prod-file-bucket`
+> Error: `AccessDenied`
+> Status: **PROBLEM**
+
+---
+
+## 1. Alert
+
+I receive a file-upload failure alert from monitoring or the application team reports that files are not being uploaded to S3.
+
+---
+
+## 2. Initial Checks
+
+Identify:
+
+- Affected EC2/application
+- S3 bucket
+- File/object name
+- Error message
+- Time of failure
+
+---
+
+## 3. S3 Checks
+
+**S3 → Bucket → Permissions**
+
+Check:
+
+- Bucket exists and is accessible
+- Bucket policy
+- Block Public Access settings if relevant
+- Object upload permissions
+
+If the error is `AccessDenied`, I mainly investigate **IAM permissions and bucket policy**.
+
+---
+
+## 4. IAM Checks
+
+**IAM → Roles → EC2 Instance Role**
+
+Check whether the EC2 role has the required S3 permission, for example:
+
+```text
+s3:PutObject
+````
+
+Also check for an **explicit Deny** in:
+
+* IAM policy
+* S3 bucket policy
+
+An explicit `Deny` overrides an `Allow`.
+
+---
+
+## 5. EC2 / Application Checks
+
+On the EC2 server:
+
+```bash
+curl -I https://<bucket-or-endpoint>
+```
+
+Check application/service logs for errors such as:
+
+```text
+AccessDenied
+403 Forbidden
+Connection timeout
+Unable to connect to S3
+```
+
+---
+
+## 6. Security / Network Checks
+
+If the error is a **connection/timeout issue** rather than `AccessDenied`, check:
+
+* EC2 Security Group outbound rules
+* Route table
+* NAT Gateway for private-subnet EC2
+* S3 VPC Endpoint, if the environment uses one
+
+---
+
+## 7. CloudWatch
+
+Check:
+
+* Application logs
+* EC2 metrics
+* Related alarms
+* Error time to correlate with the upload failure
+
+---
+
+## 8. Fix & Verification
+
+Depending on the cause:
+
+* Correct IAM role permission
+* Correct S3 bucket policy
+* Fix network/security configuration
+* Resolve application-side issue
+
+Then test another upload and verify the object appears in:
+
+**S3 → Bucket → Objects**
+
+Also verify the application and CloudWatch alerts return to normal.
+
+Update Jira/OpsGenie with the cause and resolution.
+
+---
+
+## Interview Answer
+
+> **“When I receive a file-upload failure, I first identify the EC2 application, S3 bucket and exact error. If it is an AccessDenied error, I check the EC2 IAM role, S3 permissions and bucket policy, including any explicit Deny. If it is a connectivity issue, I check Security Groups, routing, NAT Gateway or the S3 VPC Endpoint. I also check application and CloudWatch logs. After fixing the issue, I test the upload and verify the object is available in S3.”**
+
+```
+```
+---
+---
+
