@@ -1283,3 +1283,182 @@ Update Jira/OpsGenie with:
 
 ---
 ---
+
+<h1 align="center"> 7. EKS / Kubernetes Application Issue</h1>
+
+
+**Services:** EKS, EC2, CloudWatch, IAM, VPC, Load Balancer
+
+## Sample Alert
+
+> **ALERT: EKS Application Down**
+>
+> Cluster: `prod-eks`
+> Namespace: `production`
+> Pod: `app-7d8f9c`
+> Status: `CrashLoopBackOff`
+> Status: **PROBLEM**
+
+---
+
+## 1. Alert
+
+I receive an alert that an application running on **EKS** is unavailable or a pod is failing.
+
+---
+
+## 2. Initial Checks
+
+Identify:
+
+- EKS cluster
+- Namespace
+- Application/pod
+- Error message
+- Alert time
+
+---
+
+## 3. EKS / Kubernetes Checks
+
+From a system with `kubectl` access:
+
+```bash
+kubectl get pods -n production
+````
+
+Check the failed pod:
+
+```bash
+kubectl describe pod <pod-name> -n production
+```
+
+Check application logs:
+
+```bash
+kubectl logs <pod-name> -n production
+```
+
+Common issues:
+
+```text
+CrashLoopBackOff
+ImagePullBackOff
+Pending
+OOMKilled
+```
+
+Also check the deployment:
+
+```bash
+kubectl get deployment -n production
+kubectl describe deployment <deployment-name> -n production
+```
+
+---
+
+## 4. EC2 / Worker Node Check
+
+If the issue is related to the worker node:
+
+```bash
+kubectl get nodes
+```
+
+Check whether nodes are:
+
+```text
+Ready
+NotReady
+```
+
+Then check the underlying EC2 instances in:
+
+**EC2 → Instances**
+
+Verify:
+
+* Instance state
+* Status checks
+* CPU/memory-related alerts if available
+
+---
+
+## 5. Load Balancer Check
+
+If the application is exposed through a Load Balancer:
+
+**EC2 → Load Balancers → Target Groups**
+
+Check:
+
+* Target health
+* Healthy / Unhealthy targets
+* Health-check failures
+
+---
+
+## 6. IAM / VPC Checks
+
+If the pod cannot access AWS resources or has connectivity issues:
+
+* Check IAM role/service account permissions
+* Check Security Groups
+* Check subnet/route configuration
+* Check NAT Gateway or VPC endpoint if required
+
+---
+
+## 7. CloudWatch
+
+Check:
+
+**CloudWatch → Logs / Metrics**
+
+Look for:
+
+* Application errors
+* Container/pod logs
+* CPU/memory issues
+* Load Balancer errors
+
+---
+
+## 8. Fix & Verification
+
+Depending on the cause:
+
+* Fix/restart the affected application deployment
+* Resolve configuration or image issue
+* Resolve IAM permission issue
+* Resolve network/Security Group issue
+* Resolve unhealthy worker node
+
+Verify:
+
+```bash
+kubectl get pods -n production
+kubectl get nodes
+```
+
+Confirm:
+
+* Pods are `Running`
+* Nodes are `Ready`
+* Load Balancer targets are healthy
+* Application is accessible
+* CloudWatch alert is cleared
+
+Update Jira/OpsGenie with the cause and resolution.
+
+---
+
+## Interview Answer
+
+> **“When I receive an EKS application alert, I first identify the cluster, namespace and affected pod. I check the pod status, describe the pod and review its logs using kubectl. If required, I check the worker node and underlying EC2 instance. I also verify the Load Balancer target health, CloudWatch logs and metrics, and IAM or VPC connectivity if the application is unable to access AWS resources. After resolving the issue, I verify that the pods are Running, nodes are Ready and the application is accessible.”**
+
+```
+```
+---
+---
+---
