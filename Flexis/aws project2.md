@@ -1138,3 +1138,148 @@ Update Jira/OpsGenie with the cause and resolution.
 ---
 ---
 
+<h1 align="center"> 6. Security / Open Port Alert</h1>
+
+
+**Services:** EC2, Security Groups, VPC, IAM, CloudTrail
+
+## Sample Alert
+
+> **ALERT: Unauthorized Port Open**
+>
+> Instance: `i-0abc123456789`
+> Port: `22`
+> Protocol: `TCP`
+> Source: `0.0.0.0/0`
+> Status: **SECURITY ALERT**
+
+---
+
+## 1. Alert
+
+I receive a security alert indicating that an unexpected or unauthorized port is open on an EC2 instance.
+
+---
+
+## 2. Initial Checks
+
+Identify:
+
+- EC2 instance
+- Open port
+- Protocol
+- Source IP/CIDR
+- When the alert was generated
+
+---
+
+## 3. Security Group Check
+
+**EC2 → Security Groups → Inbound Rules**
+
+Check:
+
+- Port number
+- Protocol
+- Source IP/CIDR
+- Whether the rule is actually required
+
+For example:
+
+```text
+22/tcp → 0.0.0.0/0
+````
+
+This means SSH is allowed from anywhere.
+
+If SSH is required only from a corporate/bastion IP, the source should be restricted accordingly.
+
+---
+
+## 4. Linux Check
+
+Check whether a service is actually listening on that port:
+
+```bash id="0k8n3s"
+sudo ss -lntp
+```
+
+For a specific port:
+
+```bash id="w4c9yr"
+sudo ss -lntp | grep :22
+```
+
+Identify the process/service using the port.
+
+---
+
+## 5. VPC Check
+
+If required, check:
+
+**VPC → Network ACLs**
+
+Verify whether the port is allowed or blocked at the subnet level.
+
+Also check the relevant route/network path if the port is unexpectedly reachable.
+
+---
+
+## 6. IAM / CloudTrail Check
+
+If the Security Group rule was recently changed:
+
+**CloudTrail → Event history**
+
+Search for events such as:
+
+```text
+AuthorizeSecurityGroupIngress
+RevokeSecurityGroupIngress
+ModifySecurityGroupRules
+```
+
+Check:
+
+* Who made the change
+* When it was made
+* Which Security Group was modified
+
+---
+
+## 7. Fix & Verification
+
+If the rule is unauthorized:
+
+* Remove/restrict the Security Group rule after approval.
+* Confirm the service does not require the port.
+
+Then verify:
+
+```bash
+sudo ss -lntp
+```
+
+Also verify the Security Group no longer allows unwanted access.
+
+Update Jira/OpsGenie with:
+
+* Port
+* Source
+* Security Group
+* Finding
+* Action taken
+* CloudTrail details
+
+---
+
+## Interview Answer
+
+> **“When I receive an open-port security alert, I first identify the EC2 instance, port and source IP. I check the Security Group inbound rules and verify whether the port is actually required. On Linux, I use `ss -lntp` to identify whether any service is listening on that port. If the rule was recently changed, I check CloudTrail to identify who made the change and when. If unauthorized, I restrict or remove the rule after approval and verify the configuration.”**
+
+```
+```
+
+---
+---
