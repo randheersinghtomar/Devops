@@ -851,3 +851,149 @@ Document:
 
 ```
 ```
+---
+---
+
+
+<h1 align="center"> 4. HTTP 502 / Bad Request / Application Issue</h1>
+
+
+**Services:** Load Balancer, EC2, Security Groups, CloudWatch
+
+## Sample Alert
+
+> **ALERT: HTTP 502 Bad Gateway**
+>
+> Load Balancer: `prod-alb`
+> Target: `10.0.2.25`
+> Status: **502 Bad Gateway**
+> Time: `10:35 AM`
+> Status: **PROBLEM**
+
+---
+
+## 1. Alert
+
+I receive a **502 / Bad Request alert** from monitoring or an application user reports that the application is not responding correctly.
+
+---
+
+## 2. Initial Checks
+
+Identify:
+
+- Load Balancer
+- Affected target/EC2
+- Error time
+- Whether one or multiple targets are affected
+
+---
+
+## 3. Load Balancer Checks
+
+**EC2 → Load Balancers → Target Groups → Targets**
+
+Check:
+
+- Target health
+- Healthy / Unhealthy status
+- Health-check failure reason
+- Target port
+
+If the target is unhealthy, I investigate the EC2/application side.
+
+---
+
+## 4. EC2 / Linux Checks
+
+Connect to the affected EC2 and check the application service.
+
+For Apache:
+
+```bash
+sudo systemctl status httpd
+````
+
+For Nginx:
+
+```bash
+sudo systemctl status nginx
+```
+
+Check whether the application is listening on the expected port:
+
+```bash
+sudo ss -lntp
+```
+
+Test locally:
+
+```bash
+curl -I http://localhost:<port>
+```
+
+If the local application is also failing, check the application/service logs.
+
+---
+
+## 5. Security Group Check
+
+**EC2 → Security Groups**
+
+Verify:
+
+* ALB Security Group allows traffic to the required backend port
+* EC2 Security Group allows traffic **from the ALB Security Group**
+* No incorrect port restriction
+
+---
+
+## 6. CloudWatch
+
+**CloudWatch → Metrics**
+
+Check:
+
+* `HTTPCode_ELB_5XX_Count`
+* `HTTPCode_Target_5XX_Count`
+* Target response time
+* EC2 CPU/Network metrics
+
+This helps determine whether the error is coming from the **Load Balancer or backend application**.
+
+---
+
+## 7. Fix & Verification
+
+Depending on the cause:
+
+* Restart the failed application service if required/approved
+* Correct the Security Group rule if traffic is blocked
+* Fix the application issue if the backend is failing
+
+Verify:
+
+```bash
+sudo systemctl status <service>
+curl -I http://localhost:<port>
+```
+
+Then verify:
+
+* Target becomes **Healthy**
+* Application responds through the Load Balancer
+* 502 alerts stop
+* CloudWatch metrics return to normal
+
+Update Jira/OpsGenie with the root cause and resolution.
+
+---
+
+## Interview Answer
+
+> **“When I receive a 502 alert, I first check the Load Balancer target group and identify whether the backend target is healthy. Then I check the EC2 application service, listening port and test the application locally using curl. I also verify the Security Group rules between the Load Balancer and EC2 and check CloudWatch 5XX metrics. Based on the root cause, I restart the service or fix the required configuration, then verify that the target is healthy and the application is accessible through the Load Balancer.”**
+
+```
+```
+
+---
