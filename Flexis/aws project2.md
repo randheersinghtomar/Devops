@@ -154,3 +154,464 @@ Then I close or resolve the alert after confirming that the server and applicati
 **Alert → Initial Checks → AWS Checks → Linux/Application Checks → Fix → Verification → Jira/OpsGenie Update**
 
 ---
+---
+
+
+<h1 align="center">  2. High CPU / Performance Issue -Detailed</h1>
+
+
+**Services:** EC2, CloudWatch, Auto Scaling, Load Balancer
+
+---
+
+## 1. Alert
+
+I receive a **High CPU alert** from **CloudWatch / Zabbix / OpsGenie** for an EC2 instance.
+
+Example:
+
+> EC2 instance `i-xxxxxxxx` has CPU utilization above the configured threshold.
+
+---
+
+## 2. Initial Checks
+
+First, I identify:
+
+- EC2 Instance ID
+- Hostname / Private IP
+- Current CPU utilization
+- When the CPU spike started
+- Whether one or multiple EC2 instances are affected
+- Whether users are experiencing slow application response
+
+---
+
+## 3. AWS Checks
+
+### 3.1 EC2 Instance
+
+Go to:
+
+**AWS Console → EC2 → Instances → Select Instance**
+
+Check:
+
+- Instance state → `Running`
+- Instance type
+- Availability Zone
+- Status checks
+- Monitoring status
+
+---
+
+### 3.2 CloudWatch
+
+Go to:
+
+**CloudWatch → Metrics → EC2 → Per-Instance Metrics**
+
+Check:
+
+- `CPUUtilization`
+- CPU trend for the last 15 minutes / 1 hour
+- Time when CPU started increasing
+- Whether CPU is continuously high or only spiking
+
+Also check:
+
+- `NetworkIn`
+- `NetworkOut`
+- `DiskReadOps`
+- `DiskWriteOps`
+- `StatusCheckFailed`
+
+This helps determine whether the CPU issue is related to increased traffic, disk activity or another instance problem.
+
+---
+
+### 3.3 Auto Scaling
+
+Go to:
+
+**EC2 → Auto Scaling Groups → Select ASG → Activity**
+
+Check:
+
+- Desired capacity
+- Minimum capacity
+- Maximum capacity
+- Current number of instances
+- Recent scaling activities
+- Whether a new EC2 instance was launched because of high workload
+
+---
+
+### 3.4 Load Balancer
+
+Go to:
+
+**EC2 → Target Groups → Select Target Group → Targets**
+
+Check:
+
+- Target health
+- Healthy / Unhealthy targets
+- Number of EC2 instances
+- Whether the affected instance is receiving traffic
+
+If one instance is receiving unusually high traffic, I investigate the traffic distribution and application workload.
+
+---
+
+# 4. Linux Checks
+
+After connecting to the affected EC2 instance, I identify which process is consuming CPU.
+
+### 4.1 Check CPU
+
+```bash
+top
+````
+
+Check:
+
+* `%us` → CPU used by user processes
+* `%sy` → CPU used by system/kernel
+* `%id` → CPU idle
+* `%wa` → CPU waiting for I/O
+
+---
+
+### 4.2 Find Top CPU-Consuming Processes
+
+```bash
+ps -eo pid,ppid,user,%cpu,%mem,cmd --sort=-%cpu | head
+```
+
+Example:
+
+```text
+PID    USER     %CPU    %MEM    CMD
+2456   appuser  92.5    4.2     java -jar application.jar
+1823   mysql    35.2    8.1     /usr/sbin/mysqld
+```
+
+I identify the process consuming the highest CPU.
+
+---
+
+### 4.3 Check Load Average
+
+```bash
+uptime
+```
+
+Example:
+
+```text
+load average: 8.50, 7.90, 7.20
+```
+
+I compare the load average with the number of CPU cores.
+
+---
+
+### 4.4 Check Memory
+
+```bash
+free -m
+```
+
+Check:
+
+* Available memory
+* Used memory
+* Swap usage
+
+This helps identify whether memory pressure is also contributing to the performance issue.
+
+---
+
+### 4.5 Check Disk I/O
+
+```bash
+iostat -xz 1 5
+```
+
+Check:
+
+* `%util`
+* `await`
+* I/O activity
+* `%iowait`
+
+This helps determine whether the system is waiting on disk I/O rather than purely consuming CPU.
+
+---
+
+# 5. Application / Service Checks
+
+After identifying the high-CPU process, I check the corresponding application/service.
+
+## Example: Apache
+
+Check service:
+
+```bash
+systemctl status httpd
+```
+
+Check Apache processes:
+
+```bash
+ps -ef | grep httpd
+```
+
+Check Apache logs:
+
+```bash
+tail -100 /var/log/httpd/error_log
+```
+
+---
+
+## Example: Nginx
+
+Check service:
+
+```bash
+systemctl status nginx
+```
+
+Check Nginx processes:
+
+```bash
+ps -ef | grep nginx
+```
+
+Check Nginx logs:
+
+```bash
+tail -100 /var/log/nginx/error.log
+```
+
+---
+
+## Example: Java Application
+
+Find Java process:
+
+```bash
+ps -ef | grep java
+```
+
+Then check the application's configured log location for:
+
+* Exceptions
+* Repeated errors
+* High request activity
+* Application failures
+* Abnormal processes
+
+---
+
+# 6. Troubleshooting / Fix
+
+The fix depends on the actual cause.
+
+### Case 1: Application Process Consuming High CPU
+
+I identify why the application process is consuming CPU.
+
+I check:
+
+* Application logs
+* Recent application activity
+* Number of requests
+* Whether the process is stuck
+* Whether the application team has identified an issue
+
+If the application team confirms that the service needs to be restarted:
+
+```bash
+sudo systemctl restart <application-service>
+```
+
+---
+
+### Case 2: High Traffic
+
+I check:
+
+**EC2 → Target Groups → Targets**
+
+and
+
+**CloudWatch → EC2 Metrics**
+
+If the high CPU is caused by increased workload, I check:
+
+**EC2 → Auto Scaling Groups → Activity**
+
+to verify whether Auto Scaling is launching additional instances.
+
+---
+
+### Case 3: Disk I/O Causing Performance Issue
+
+I check:
+
+```bash
+iostat -xz 1 5
+```
+
+and CloudWatch:
+
+* `DiskReadOps`
+* `DiskWriteOps`
+
+If the issue is related to storage performance, I investigate the EBS volume and follow the approved change process.
+
+---
+
+### Case 4: Instance Capacity Is Not Sufficient
+
+If the workload consistently exceeds the current instance capacity, I raise it with the appropriate team.
+
+After approval, the instance type or Auto Scaling configuration can be adjusted through the approved change process.
+
+---
+
+## Important
+
+I do **not** immediately run:
+
+```bash
+kill -9 <PID>
+```
+
+or reboot the production server just because CPU is high.
+
+First, I identify:
+
+**Which process → Why CPU is high → What is the impact → What is the correct fix**
+
+---
+
+# 7. Verification
+
+After applying the fix, I verify the issue from AWS, Linux and application sides.
+
+### CloudWatch
+
+Go to:
+
+**CloudWatch → Metrics → EC2**
+
+Verify:
+
+* `CPUUtilization` has returned to normal
+* No new CPU alerts
+* Network metrics are normal
+* Disk metrics are normal
+
+---
+
+### Linux
+
+```bash
+top
+uptime
+free -m
+```
+
+Confirm:
+
+* CPU utilization has reduced
+* Load average has reduced
+* Memory is normal
+
+---
+
+### Application Service
+
+For Apache:
+
+```bash
+systemctl status httpd
+```
+
+For Nginx:
+
+```bash
+systemctl status nginx
+```
+
+For the application:
+
+```bash
+systemctl status <application-service>
+```
+
+Verify that the application service is running normally.
+
+---
+
+### Load Balancer
+
+Go to:
+
+**EC2 → Target Groups → Targets**
+
+Verify:
+
+* Target status = `Healthy`
+* No unexpected unhealthy targets
+* Traffic is being distributed normally
+
+---
+
+### Auto Scaling
+
+Go to:
+
+**EC2 → Auto Scaling Groups → Activity**
+
+Verify:
+
+* Scaling activity completed successfully
+* Desired and current capacity are correct
+* New instances are healthy, if scaling occurred
+
+---
+
+# 8. Jira / OpsGenie Update
+
+Finally, I update the incident with:
+
+* Affected EC2 instance
+* CPU utilization observed
+* Time of CPU spike
+* High-CPU process identified
+* CloudWatch findings
+* Linux investigation
+* Application/service findings
+* Action performed
+* Verification results
+* Current status
+
+---
+
+# 9. Interview Answer
+
+> **“When I receive a high CPU alert, I first identify the affected EC2 instance and check the CPU utilization trend in CloudWatch. I also check network, disk and status-check metrics to understand whether the issue is related to workload or another resource.**
+>
+> **Then I connect to the Linux server and use `top`, `ps`, `uptime`, `free` and `iostat` to identify the process consuming CPU and check whether memory or I/O is also contributing. If, for example, Apache, Nginx or a Java application is consuming high CPU, I check the specific service status and its application logs.**
+>
+> **I also check the Load Balancer target health and Auto Scaling activity to see whether the instance is receiving high traffic or whether additional instances have been launched. Based on the root cause, I restart the affected application service if required or follow the approved scaling/change process.**
+>
+> **After the fix, I verify CPU utilization in CloudWatch, check the Linux service and application, confirm the Load Balancer target is healthy and verify Auto Scaling activity. Finally, I update the incident in Jira/OpsGenie with the findings, actions and verification results.”**
+
+```
+```
