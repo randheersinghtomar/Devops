@@ -615,3 +615,239 @@ Finally, I update the incident with:
 
 ```
 ```
+
+---
+---
+
+<h1 align="center"> 3. Disk Space / Filesystem Full</h1>
+
+
+**Services:** EC2, EBS, CloudWatch, Linux Filesystem/LVM
+
+## Sample Alert
+
+> **ALERT: Disk Space Usage High**
+>
+> Host: `prod-app-01`  
+> Instance: `i-0abc123456789`  
+> Filesystem: `/var`  
+> Usage: `92%`  
+> Threshold: `90%`  
+> Status: **PROBLEM**
+
+---
+
+## 1. Alert
+
+I receive a **disk-space alert** from CloudWatch/Zabbix/OpsGenie indicating that a filesystem is above the configured threshold.
+
+---
+
+## 2. Initial Checks
+
+Identify:
+
+- EC2 instance ID
+- Hostname / Private IP
+- Affected filesystem
+- Current usage
+- Alert start time
+
+---
+
+## 3. AWS Checks
+
+### EC2
+
+**EC2 → Instances → Affected Instance**
+
+Check:
+
+- Instance is running
+- Status checks are healthy
+- Instance ID and AZ
+
+### EBS
+
+**EC2 → Elastic Block Store → Volumes**
+
+Check:
+
+- Attached EBS volume
+- Volume ID
+- Volume size
+- Volume type, e.g. `gp3`
+
+If cleanup is not sufficient, check whether the EBS volume needs to be expanded.
+
+### CloudWatch
+
+**CloudWatch → Metrics → EC2**
+
+Check:
+
+- Disk-related alarm
+- Alert history
+- Other metrics if the disk issue is affecting the application
+
+---
+
+## 4. Linux Checks
+
+### Check filesystem usage
+
+```bash
+df -h
+````
+
+### Check inode usage
+
+```bash
+df -i
+```
+
+### Find which directory is consuming space
+
+```bash
+sudo du -xhd1 / | sort -h
+```
+
+Then go deeper into the affected directory:
+
+```bash
+sudo du -xhd1 /var | sort -h
+```
+
+Common locations:
+
+```text
+/var/log
+/var/lib
+/tmp
+/home
+```
+
+### Check disks and mounts
+
+```bash
+lsblk
+df -Th
+```
+
+If LVM is used:
+
+```bash
+pvs
+vgs
+lvs
+```
+
+---
+
+## 5. Identify the Cause
+
+For example, if `/var/log` is consuming most of the space:
+
+```bash
+sudo du -xhd1 /var/log | sort -h
+```
+
+Check the relevant logs/service before taking action.
+
+---
+
+## 6. Fix
+
+### If logs/temp files are consuming space
+
+Clean up according to the approved cleanup policy.
+
+For systemd journal:
+
+```bash
+sudo journalctl --disk-usage
+```
+
+If approved:
+
+```bash
+sudo journalctl --vacuum-time=7d
+```
+
+### If EBS needs more space
+
+Increase the volume from:
+
+**EC2 → Volumes → Modify volume**
+
+Then verify:
+
+```bash
+lsblk
+```
+
+For **ext4**:
+
+```bash
+sudo resize2fs /dev/...
+```
+
+For **XFS**:
+
+```bash
+sudo xfs_growfs /mount_point
+```
+
+If LVM is used:
+
+```bash
+pvs
+vgs
+lvs
+```
+
+Then typically:
+
+```bash
+sudo lvextend -r -L +10G /dev/mapper/...
+```
+
+---
+
+## 7. Verification
+
+```bash
+df -h
+df -i
+lsblk
+```
+
+Verify:
+
+* Filesystem usage is normal
+* Application/service is working
+* CloudWatch/Zabbix alert is cleared
+* No new disk alert is generated
+
+---
+
+## 8. Jira / OpsGenie Update
+
+Document:
+
+* Affected EC2 instance
+* Filesystem and usage %
+* Root cause
+* EBS volume details
+* Cleanup or expansion performed
+* Verification result
+* Alert resolution
+
+---
+
+## Interview Answer
+
+> **“When I receive a disk-space alert, I identify the affected EC2 instance and filesystem. I check `df -h` and `df -i` to determine whether it is space or inode related. Then I use `du` to find what is consuming the space and check the attached EBS volume from AWS. Depending on the cause, I clean up approved logs or temporary files, or expand the EBS volume and filesystem. Finally, I verify the filesystem, application health and monitoring alert, and update Jira or OpsGenie.”**
+
+```
+```
