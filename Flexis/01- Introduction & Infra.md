@@ -15,8 +15,6 @@ I also collaborated with Network, Storage, Cloud, and Application teams to troub
 
 Now, I’m looking to move into a dedicated AWS Cloud Engineer role where I can use my existing Linux and production infrastructure experience and further grow my expertise in AWS and cloud technologies.
 
-This is now consistent with your **last working date: 14 September 2026**.
-
 
 ---
 ---
