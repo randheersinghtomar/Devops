@@ -1,4 +1,25 @@
+<h1 align="center"> Introduction</h1>
 
+
+Hi, I’m Randheer. I have around 4 years of experience in infrastructure and cloud operations, with strong experience in Linux administration and AWS.
+
+My most recent experience was with Flexis India Pvt. Ltd., where I supported production infrastructure across AWS and Linux environments. My primary hands-on work was with Linux EC2 servers, Security Groups, storage and filesystem management, monitoring, troubleshooting, and production incidents.
+
+On the AWS side, I worked with services such as EC2, VPC, IAM, S3, EBS, CloudWatch, and CloudTrail. I also supported environments using RDS, EKS, Auto Scaling Groups, and Load Balancers from the monitoring, troubleshooting, and production-support side.
+
+My responsibilities included EC2 provisioning and maintenance, Security Group management, disk and filesystem management, IAM access and permissions, S3 support, and monitoring using CloudWatch, Zabbix, OpsGenie, and Nagios.
+
+Along with AWS, I have strong Linux administration experience on RHEL and Ubuntu. I regularly worked on LVM, disk and filesystem issues, OS patching, service troubleshooting, performance issues, and P1/P2 production incidents.
+
+I also collaborated with Network, Storage, Cloud, and Application teams to troubleshoot infrastructure issues and maintain production availability.
+
+Now, I’m looking to move into a dedicated AWS Cloud Engineer role where I can use my existing Linux and production infrastructure experience and further grow my expertise in AWS and cloud technologies.
+
+This is now consistent with your **last working date: 14 September 2026**.
+
+
+---
+---
 <h1 align="center"> “What is your current infrastructure?”</h1>
 
 
