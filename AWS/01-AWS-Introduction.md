@@ -28,7 +28,8 @@ AWS enables organizations to build, deploy, and scale applications without inves
 
 ---
 
-# Virtualization
+<h1 align="center"> Virtualization</h1>
+
 
 **Virtualization** is a technology that allows us to create **multiple virtual computers (Virtual Machines/VMs) on a single physical server**.
 
@@ -144,7 +145,8 @@ Host OS (Windows/Linux/macOS)
 
 ---
 
-# 1. What is Cloud Computing?
+<h1 align="center"> 1. What is Cloud Computing?</h1>
+
 
 Cloud Computing is the delivery of IT resources such as servers, storage, databases, networking, and software over the internet.
 
@@ -165,7 +167,8 @@ Instead of purchasing a physical server for hosting a website, a company can lau
 
 ---
 
-# 2. Traditional Infrastructure vs Cloud Computing
+<h1 align="center"> 2. Traditional Infrastructure vs Cloud Computing</h1>
+
 
 Before cloud computing, organizations had to purchase and maintain physical infrastructure such as servers, storage devices, networking equipment, and data centers. This required significant investment, ongoing maintenance, and dedicated IT teams.
 
@@ -207,7 +210,8 @@ Instead of purchasing ten physical servers for a new application, an organizatio
 
 ---
 
-# 3. Benefits of Cloud Computing
+<h1 align="center"> 3. Benefits of Cloud Computing</h1>
+
 
 Cloud Computing offers several advantages that help organizations reduce infrastructure costs, improve operational efficiency, and deploy applications faster. These benefits make cloud computing the preferred choice for startups, enterprises, and government organizations.
 
@@ -256,7 +260,8 @@ The major benefits of Cloud Computing include:
 
 ---
 
-# 4. Types of Cloud Computing
+<h1 align="center"> 4. Types of Cloud Computing</h1>
+
 
 Cloud Computing can be deployed using different models based on business requirements, security, and infrastructure management.
 
@@ -340,7 +345,8 @@ Cloud Computing deployment models help organizations choose the right infrastruc
 
 ---
 
-# 5. Cloud Service Models (IaaS, PaaS, SaaS)
+<h1 align="center"> 5. Cloud Service Models (IaaS, PaaS, SaaS)</h1>
+
 
 Cloud providers offer different service models based on the level of responsibility shared between the cloud provider and the customer.
 
@@ -436,7 +442,8 @@ Cloud service models provide different levels of management and control.
 
 ---
 
-# 6. What is AWS?
+<h1 align="center"> 6. What is AWS?</h1>
+
 
 Amazon Web Services (AWS) is a cloud computing platform provided by Amazon. It offers more than 200 fully featured cloud services, including computing, storage, networking, databases, security, analytics, machine learning, and serverless computing.
 
@@ -509,7 +516,8 @@ AWS is a secure, scalable, and reliable cloud computing platform that helps orga
 
 ---
 
-# 7. AWS Global Infrastructure
+<h1 align="center"> 7. AWS Global Infrastructure</h1>
+
 
 AWS has one of the largest and most reliable cloud infrastructures in the world. It consists of Regions, Availability Zones (AZs), and Edge Locations, enabling organizations to deploy highly available, scalable, and low-latency applications.
 
@@ -626,7 +634,8 @@ AWS Global Infrastructure consists of Regions, Availability Zones, and Edge Loca
 
 ---
 
-# 8. AWS Shared Responsibility Model
+<h1 align="center"> 8. AWS Shared Responsibility Model</h1>
+
 
 The AWS Shared Responsibility Model defines the security responsibilities shared between AWS and the customer.
 
@@ -676,7 +685,8 @@ The customer is responsible for protecting workloads running inside AWS.
 
 ---
 
-## Shared Responsibility Diagram
+<h1 align="center"> Shared Responsibility Diagram</h1>
+
 
 ```text
               Shared Responsibility Model
@@ -743,7 +753,8 @@ The AWS Shared Responsibility Model clearly defines which security tasks are han
 
 ---
 
-# 9. AWS Free Tier
+<h1 align="center"> 9. AWS Free Tier</h1>
+
 
 The AWS Free Tier allows users to explore and learn AWS services at no cost within certain usage limits. It is designed for beginners, students, and developers to gain hands-on experience before moving to paid resources.
 
@@ -809,7 +820,8 @@ The AWS Free Tier helps users learn and experiment with AWS services while minim
 
 ---
 
-# 10. AWS Use Cases
+<h1 align="center"> 10. AWS Use Cases</h1>
+
 
 AWS is used by startups, enterprises, educational institutions, and government organizations across various industries.
 
@@ -861,7 +873,8 @@ AWS provides services for almost every business requirement, making it suitable 
 
 ---
 
-# 11. AWS Best Practices
+<h1 align="center"> 11. AWS Best Practices</h1>
+
 
 Following AWS best practices improves security, reliability, performance, and cost optimization.
 
@@ -915,7 +928,8 @@ Following AWS best practices helps build secure, scalable, highly available, and
 
 ---
 
-# 12. Interview Questions
+<h1 align="center"> 12. Interview Questions</h1>
+
 
 ### Basic Questions
 
